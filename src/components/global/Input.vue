@@ -20,10 +20,10 @@
         ]"
         :type="type"
         :placeholder="placeholder"
+        :value="value"
         @input="handleOnChange"
         autoComplete="on"
       />
-      <!-- :value="modelValue" -->
     </div>
   </label>
 </template>
@@ -39,6 +39,7 @@ defineProps<{
   placement?: "start";
   type?: string;
   variant?: "primary" | "search";
+  value?: string;
   onChange?: (...args: any[]) => any;
   required?: boolean;
 }>();

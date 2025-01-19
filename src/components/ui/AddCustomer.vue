@@ -20,7 +20,7 @@
                 :placement="
                   field.placement === 'start' ? field.placement : undefined
                 "
-                :value="customer[field.model]"
+                :value="String(customer[field.model])"
                 @input="(event: any) => handleInputChange(field.model, event.target.value)"
               />
               <p
@@ -78,7 +78,7 @@
             class="block text-sm font-medium text-gray-700 mb-1"
             >Customer Details</label
           >
-          <div ref="editor"></div>
+          <div ref="editor" class="min-h-32"></div>
         </div>
 
         <div class="mt-12 lg:mt-16 mb-2 lg:mb-4 flex items-center space-x-4 lg:space-x-5">
@@ -279,10 +279,7 @@ onMounted(() => {
     customer.state = customerDetails.state;
     customer.status = customerDetails.status;
     customer.details = customerDetails.details;
-
   }
-
-  console.log('customerDetails', customerDetails)
 });
 
 
@@ -292,7 +289,13 @@ const saveCustomer = () => {
   if (!isValid) {
     return;
   }
-  customerStore.addCustomer(customer);
+
+  if(customerId.value) {
+    customerStore.updateCustomer(customerId.value, customer);
+  } else {
+    customerStore.addCustomer(customer);
+  }
+
   router.push("/customers");
 };
 
