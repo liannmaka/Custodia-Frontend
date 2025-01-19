@@ -11,7 +11,4 @@
 
 <script setup lang="ts">
 import ChipIcon from "../icons/ChipIcon.vue";
-import { useCustomerStore } from "../../store/customers";
-
-const { searchTerm } = useCustomerStore();
 </script>

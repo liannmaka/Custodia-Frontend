@@ -5,7 +5,7 @@
         <h1 class="text-2xl font-bold">Customers</h1>
         <div
           @click="openAddCustomer"
-          class="flex text-sm items-center gap-1 bg-primary p-3 rounded-md text-white cursor-pointer"
+          class="flex text-sm lg:text-base items-center gap-1 bg-primary py-3 px-4 rounded-md text-white cursor-pointer"
         >
           <span class="self-center">
             <AddIcon />
@@ -13,8 +13,8 @@
           <span> Add Customer </span>
         </div>
       </div>
-      <div class="bg-white">
-        <div class="w-[300px] pt-8 pl-6">
+      <div class="bg-white pt-8 px-4 md:px-6 lg:px-8">
+        <div class="w-[300px] mb-2">
           <Input
             v-model="searchTerm"
             placeholder="Search"
@@ -23,7 +23,20 @@
             variant="search"
           />
         </div>
-        <Table :columns="productTitles" :data="filteredCustomers" />
+        <div class="overflow-x-auto">
+          <Table
+            :columns="productTitles"
+            :data="filteredCustomers"
+          />
+            <!-- :render-cell="(rowIndex, columnKey, rowData) => {
+              if(columnKey === 'actions') {
+                return (
+                  <div>actions</div>
+                )
+              }
+              return rowData[columnKey];
+            }" -->
+        </div>
       </div>
     </div>
     <div class="pt-6 rounded-lg" v-if="addCustomer">
@@ -46,11 +59,11 @@ import Table from "../global/Table.vue";
 import AddCustomer from "../AddCustomer.vue";
 import Input from "../global/Input.vue";
 import SearchIcon from "../icons/SearchIcon.vue";
-
 import { useCustomerStore } from "../../store/customers";
 import { ref } from "vue";
 
-const { filteredCustomers } = useCustomerStore();
+const { searchTerm, filteredCustomers } = useCustomerStore();
+
 const addCustomer = ref(false);
 
 const openAddCustomer = () => {

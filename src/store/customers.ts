@@ -1,19 +1,11 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-
-interface Customer {
-    id?: string
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    state: string;
-    status: boolean;
-  }
+import { v4 as uuidv4 } from 'uuid';
+import type { CustomerDetails } from "../types/global";
   
 
 export const useCustomerStore = defineStore("customer", () => {
-  const customers = ref<Customer[]>([]);
+  const customers = ref<CustomerDetails[]>([]);
   const searchTerm = ref("");
 
   // Computed filtered customers based on the search term
@@ -22,10 +14,10 @@ export const useCustomerStore = defineStore("customer", () => {
 
     return customers.value.filter((customer) => {
       return (
-        customer.firstName.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        customer.lastName.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        customer. first_name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+        customer.last_name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
         customer.email.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-        customer.phone.includes(searchTerm.value) ||
+        customer.phone_number.includes(searchTerm.value) ||
         (customer.state || "").toLowerCase().includes(searchTerm.value.toLowerCase()) ||
         (customer.status ? "active" : "inactive")
           .toLowerCase()
@@ -35,12 +27,14 @@ export const useCustomerStore = defineStore("customer", () => {
   });
 
   // Actions
-  const addCustomer = (newCustomer: Customer) => {
-    const id = String(customers.value.length + 1);
-    customers.value.push({ id, ...newCustomer });
+  const addCustomer = (newCustomer: CustomerDetails) => {
+    customers.value.push({
+      id: uuidv4(),
+      ...newCustomer
+    });
   };
 
-  const updateCustomer = (id: string, updatedCustomer: Customer) => {
+  const updateCustomer = (id: string, updatedCustomer: CustomerDetails) => {
     const index = customers.value.findIndex((customer) => customer.id === id);
     if (index !== -1) {
       customers.value[index] = { id, ...updatedCustomer };
@@ -59,4 +53,9 @@ export const useCustomerStore = defineStore("customer", () => {
     updateCustomer,
     deleteCustomer,
   };
+}, {
+  persist: {
+    key: 'customer-store',
+    storage: localStorage,
+  },
 });

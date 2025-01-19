@@ -1,11 +1,11 @@
 <template>
-    <table class="w-full border-separate border-spacing-y-4 rounded-lg">
-      <thead class="bg-secondary">
+    <table class="w-full border-separate border-spacing-y-4">
+      <thead>
         <tr>
           <th
             v-for="column in columns"
             :key="column.key"
-            class='rounded-th bg-ch-thead text-black/50 text-xs font-medium text-center py-3.5 px-4 uppercase tracking-[-0.03em] mx-2'
+            class='bg-secondary text-black/50 text-xs font-medium text-center py-3.5 px-4 uppercase tracking-[-0.03em] mx-2'
           >
             {{ column.label }}
           </th>
@@ -41,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import type { JsxElement } from 'typescript';
+
 interface Column {
     label: string;
     key: string;
@@ -56,7 +58,7 @@ interface Column {
 const {renderCell, } = defineProps<{
     columns: Column[];
     data: Identifiable[];
-    renderCell?: (rowIndex: number, columnKey: string, rowData: Identifiable) => string | number | null;
+    renderCell?: (rowIndex: number, columnKey: string, rowData: Identifiable) => string | number | null | JsxElement;
     loadingData?: boolean;
     loadingDataText?: string | null;
     emptyText?: string;
@@ -72,5 +74,21 @@ const renderCellContent = (rowIndex: number, columnKey: string, rowData: Identif
   };
 </script>
 
-<style scoped></style>
+<style scoped>
+table thead tr th:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+table thead tr th:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+table tbody tr td {
+  max-width: 15rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+</style>
 

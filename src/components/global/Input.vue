@@ -1,7 +1,7 @@
 <template>
   <label class="w-full">
     <div
-      class="mb-1 text-[var(--bice-blue)] text-[13px] leading-snug font-normal"
+      class="mb-1 text-[var(--bice-blue)] text-sm leading-snug font-normal"
     >
       {{ label }}
       <span v-if="required">*</span>
@@ -22,14 +22,15 @@
         ]"
         :type="type"
         :placeholder="placeholder"
-        :onChange="handleOnChange"
+        @input="handleOnChange"
         autoComplete="on"
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
         autocomplete="on"
-        class="w-full bg-secondary py-2 text-xs rounded-md border-[1.5px] border-[#ccc] focus:border-[#ccc] focus:ring-0"
-      />
+        class="w-full bg-secondary py-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none"
+        />
+        <!-- :value="modelValue" -->
     </div>
   </label>
 </template>
@@ -37,7 +38,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 
-const { onChange } = defineProps<{
+defineProps<{
   className?: string;
   label?: string;
   placeholder?: string;
@@ -47,18 +48,18 @@ const { onChange } = defineProps<{
   variant?: "primary" | "search";
   onChange?: (...args: any[]) => any;
   required?: boolean;
+  // modelValue: string;
 }>();
 
-// const handleOnChange = (e: Event) => {
-//   if (onChange) {
-//     onChange(e);
-//   }
-//   return null;
-// };
-
+// const emit = defineEmits(["startIconClick", "onChange", "update:modelValue"]);
 const emit = defineEmits(["startIconClick", "onChange"]);
 
 const handleOnChange = (event: Event) => {
-  emit("onChange", event);
+  const value = (event.target as HTMLInputElement).value;
+
+  // emit("update:modelValue", value)
+  emit("onChange", value);
+  // console.log(value)
 };
+
 </script>

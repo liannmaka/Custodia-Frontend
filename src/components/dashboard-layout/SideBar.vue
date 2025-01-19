@@ -1,5 +1,5 @@
 <template>
-  <aside class="absolute lg:relative min-w-64 h-full bg-white overflow-y-auto shadow-sm">
+  <aside class="z-50 absolute lg:relative min-w-64 h-full bg-white overflow-y-auto shadow-sm">
     <nav class="w-full h-full  text-[#7d899f]">
       <ul class="w-full h-full flex flex-col space-y-2 px-4 py-10">
         <li

@@ -1,10 +1,10 @@
-export interface Customer {
+export interface CustomerDetails {
     id?: string
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
-    phone: string;
+    phone_number: string;
     state: string;
     status: boolean;
     details: string;
-  }
+}
