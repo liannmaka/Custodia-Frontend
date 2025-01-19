@@ -70,7 +70,7 @@
             class="block text-sm font-medium text-gray-700 mb-1"
             >Customer Details</label
           >
-          <div ref="editor" id="customer-details" class="quill-editor"></div>
+          <div ref="editor"></div>
         </div>
       </div>
       <div class="mt-24 flex items-center space-x-4 lg:space-x-5">
@@ -225,7 +225,7 @@ const formFields: FormField[] = [
   },
 ];
 const { errors, validateAll } = useValidation(formFields, customer);
-const editorContent = ref("");
+
 const editor = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
@@ -234,13 +234,15 @@ onMounted(() => {
       theme: "snow",
       modules: {
         toolbar: [
-          ["bold", "italic"],
-          [{ list: "bullet" }]
-        ],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link'],
+      [{ align: '' }, { align: 'center' }, { align: 'right' }]
+    ],
       },
     });
 
-    quill.root.innerHTML = editorContent.value;
+    quill.root.innerHTML = customer.details;
 
     quill.on("text-change", () => {
       customer.details = quill.root.innerHTML;
