@@ -3,7 +3,7 @@
     <div className="w-full h-full flex flex-col">
       <Header />
       <div class="w-full h-full flex mt-20 overflow-hidden">
-        <SideBar />
+        <SideBar :active="active" @close-sidebar="handleSidebarToggle"/>
         <div class="w-full h-full bg-secondary">
           <div class="space-pad w-full h-[calc(100%-2rem)] overflow-auto">
             <router-view />
@@ -23,5 +23,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import { Header, SideBar } from "./components/global";
+
+const active = ref<boolean>(true)
+
+const handleSidebarToggle = () => {
+  active.value = !active.value;
+}
 </script>
