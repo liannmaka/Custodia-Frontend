@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white px-10 py-4">
     <div class="pt-6 rounded-lg">
-      <h2 class="text-xl font-bold">Add Customer</h2>
+      <h2 class="text-xl font-bold">{{ customerId ? 'Edit' : 'Add' }} Customer</h2>
       <form @submit.prevent="saveCustomer()">
         <div class="grid grid-cols-2 gap-4 pt-4">
           <div v-for="field in formFields" :key="field.label">
@@ -74,10 +74,10 @@
             <div ref="editor"></div>
           </div>
         </div>
-        <div class="mt-24 flex items-center space-x-4 lg:space-x-5">
+        <div class="mt-24 mb-3 flex items-center space-x-4 lg:space-x-5">
           <button
             class="bg-secondary text-black/75"
-            @click="$emit('close-customer')"
+            @click="cancel"
           >
             Cancel
           </button>
@@ -86,7 +86,7 @@
             type="submit"
             :disabled="!validateAll()"
           >
-            Save
+            {{ customerId ? 'Save' : 'Create' }}
           </button>
         </div>
       </form>
@@ -96,18 +96,22 @@
 
 <script setup lang="ts">
 import { ref, onMounted, reactive } from "vue";
+import { useRoute } from "vue-router";
 import Quill from "quill";
 import { Input } from "../global";
 import { EmailIcon ,PhoneIcon, PersonIcon } from "../icons";
 import { useCustomerStore } from "../../store/customers";
 import type { CustomerDetails, FormField } from "../../types/global";
 import { useValidation } from "../composition/validation";
+import router from "../../router";
 
 const emit = defineEmits(["customer-saved", "close-customer"]);
 export type Customer = typeof customer;
 
-const { addCustomer } = useCustomerStore();
+const route = useRoute();
+const customerStore = useCustomerStore();
 
+const customerId = ref<string>('')
 const customer = reactive<CustomerDetails>({
   first_name: "",
   last_name: "",
@@ -252,14 +256,24 @@ onMounted(() => {
   }
 });
 
+onMounted(() => {
+  const id = route.params.id as string;
+  let customerDetails = customerStore.getCustomerById(id);
+
+  customerId.value = customerDetails?.id ?? '';
+});
+
 const saveCustomer = () => {
   const isValid = validateAll();
   if (!isValid) {
     return;
   }
-  addCustomer(customer);
-  emit('customer-saved');
-  console.log("custmr-dets", customer);
+  customerStore.addCustomer(customer);
+  router.push("/customers");
+};
+
+const cancel = () => {
+  router.push("/customers");
 };
 
 const handleInputChange = (field: keyof Customer, value: string | boolean) => {

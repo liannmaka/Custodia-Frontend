@@ -26,6 +26,7 @@
         <Table
           :columns="productTitles"
           :data="customerStore.filteredCustomers"
+          @edit="handleEdit"
           @delete="handleDelete"
         />
       </div>
@@ -34,12 +35,21 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import { Table, Input } from "../global";
 import { SearchIcon, AddIcon } from "../icons";
 import { useCustomerStore } from "../../store/customers";
 import type { Identifiable } from "../global/Table.vue";
 
+const router = useRouter();
 const customerStore = useCustomerStore();
+
+const handleEdit = (rowData: Identifiable) => {
+  router.push({
+    name: 'EditCustomer',
+    params: { id: rowData.id },
+  });
+}
 
 const handleDelete = (rowData: Identifiable) => {
   const customerId = rowData.id;

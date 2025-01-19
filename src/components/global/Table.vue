@@ -5,7 +5,7 @@
         <th
           v-for="column in columns"
           :key="column.key"
-          class="bg-secondary text-black/50 text-xs font-medium text-center py-3.5 px-4 uppercase tracking-[-0.03em] mx-2"
+          class="text-black/50 text-xs font-medium text-left py-3.5 px-4 uppercase tracking-[-0.03em] mx-2"
         >
           {{ column.label }}
         </th>
@@ -22,7 +22,7 @@
           <td
             v-for="column in columns"
             :key="column.key"
-            class='bg-secondary text-black/50 text-xs font-medium text-left py-3.5 px-4 uppercase tracking-[-0.03em]'
+            class='bg-secondary text-black/50 text-xs font-medium text-left py-3.5 px-4 tracking-[-0.03em]'
           >
             <template v-if="column.key === 'actions'">
               <div class="flex gap-2">

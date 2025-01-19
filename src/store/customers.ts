@@ -56,6 +56,10 @@ export const useCustomerStore = defineStore(
       );
     };
 
+    const getCustomerById = (id: string): CustomerDetails | undefined => {
+      return customers.value.find((customer) => customer.id === id);
+    };
+
     return {
       customers,
       searchTerm,
@@ -63,6 +67,7 @@ export const useCustomerStore = defineStore(
       addCustomer,
       updateCustomer,
       deleteCustomer,
+      getCustomerById,
     };
   },
   {
