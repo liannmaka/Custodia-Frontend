@@ -3,20 +3,31 @@
     <h2 class="text-xl font-bold">Add Customer</h2>
     <form @submit.prevent="saveCustomer()">
       <div class="grid grid-cols-2 gap-4 pt-4">
-        <Input
-          v-for="field in formFields"
-          :key="field.id"
-          :label="field.label"
-          :type="field.type"
-          :placeholder="field.placeholder"
-          :required="field.required"
-          :icon="field.icon"
-          :variant="field.variant"
-          :placement="field.placement === 'start' ? field.placement : undefined"
-          :value="customer[field.model]"
-          @input="(event: any) => handleInputChange(field.model, event.target.value)"
-        />
-        <div>
+        <div v-for="field in formFields">
+          <Input
+            v-if="!field.renderSeparately"
+            :key="field.id"
+            :label="field.label"
+            :type="field.type"
+            :placeholder="field.placeholder"
+            :required="field.required"
+            :icon="field.icon"
+            :variant="field.variant"
+            :placement="
+              field.placement === 'start' ? field.placement : undefined
+            "
+            :value="customer[field.model]"
+            @input="(event: any) => handleInputChange(field.model, event.target.value)"
+          />
+          <p
+            v-if="!field.renderSeparately && errors[field.model]"
+            class="text-red-500 text-xs mt-1"
+          >
+            {{ errors[field.model] }}
+          </p>
+        </div>
+
+        <div v-if="formFields.find((field) => field.model === 'state')">
           <label for="state" class="block text-sm font-medium text-gray-700"
             >State</label
           >
@@ -25,14 +36,18 @@
             id="state"
             @change="handleInputChange('state', customer.state)"
             class="mt-1 w-full bg-secondary py-3 px-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none"
-            >
+          >
             <option disabled value="">Select State</option>
             <option v-for="state in states" :key="state" :value="state">
               {{ state }}
             </option>
           </select>
+          <p v-if="errors.state" class="text-red-500 text-xs mt-1">
+            {{ errors.state }}
+          </p>
         </div>
-        <div>
+
+        <div v-if="formFields.find((field) => field.model === 'state')">
           <label for="status" class="block text-sm font-medium text-gray-700"
             >Status</label
           >
@@ -52,7 +67,7 @@
         <div class="col-span-2">
           <label
             for="customer-details"
-            class="block text-sm font-medium text-gray-700"
+            class="block text-sm font-medium text-gray-700 mb-1"
             >Customer Details</label
           >
           <div ref="editor" id="customer-details" class="quill-editor"></div>
@@ -66,7 +81,9 @@
           Cancel
         </button>
         <button
-          class="bg-primary text-white" type="submit"
+          class="bg-primary text-white disabled:text-gray-100 disabled:cursor-not-allowed"
+          type="submit"
+          :disabled="!validateAll()"
         >
           Save
         </button>
@@ -76,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive, type Component } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import Input from "./global/Input.vue";
@@ -84,21 +101,10 @@ import EmailIcon from "./icons/EmailIcon.vue";
 import PhoneIcon from "./icons/PhoneIcon.vue";
 import PersonIcon from "./icons/PersonIcon.vue";
 import { useCustomerStore } from "../store/customers";
-import { type CustomerDetails } from "../types/global";
+import type { CustomerDetails, FormField } from "../types/global";
+import { useValidation } from "./composition/validation";
 
-export interface FormField {
-  id: number;
-  model: keyof Customer;
-  label: string;
-  type: string;
-  placeholder: string;
-  required: boolean;
-  icon: Component;
-  placement?: "start" | "end";
-  variant: "primary" | "search";
-}
-
-type Customer = typeof customer;
+export type Customer = typeof customer;
 
 const { addCustomer } = useCustomerStore();
 
@@ -111,7 +117,6 @@ const customer = reactive<CustomerDetails>({
   status: true,
   details: "",
 });
-
 
 const states = [
   "Abia",
@@ -164,6 +169,7 @@ const formFields: FormField[] = [
     icon: PersonIcon,
     placement: "start",
     variant: "primary",
+    minLength: 2,
   },
   {
     id: 2,
@@ -175,6 +181,7 @@ const formFields: FormField[] = [
     icon: PersonIcon,
     placement: "start",
     variant: "primary",
+    minLength: 2,
   },
   {
     id: 3,
@@ -186,6 +193,7 @@ const formFields: FormField[] = [
     icon: EmailIcon,
     placement: "start",
     variant: "primary",
+    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   },
   {
     id: 4,
@@ -193,13 +201,32 @@ const formFields: FormField[] = [
     label: "Phone Number",
     type: "tel",
     placeholder: "Enter your phone number",
-    required: false,
+    required: true,
     icon: PhoneIcon,
     placement: "start",
     variant: "primary",
   },
+  {
+    id: 5,
+    model: "state",
+    label: "State",
+    type: "select",
+    required: true,
+    options: states,
+    variant: "primary",
+    renderSeparately: true,
+  },
+  {
+    id: 6,
+    model: "status",
+    label: "Status",
+    type: "checkbox",
+    required: false,
+    variant: "primary",
+    renderSeparately: true,
+  },
 ];
-
+const { errors, validateAll } = useValidation(formFields, customer);
 const editorContent = ref("");
 const editor = ref<HTMLDivElement | null>(null);
 
@@ -225,8 +252,12 @@ onMounted(() => {
 });
 
 const saveCustomer = () => {
+  const isValid = validateAll();
+  if (!isValid) {
+    return;
+  }
   addCustomer(customer);
-  console.log('custmr-dets', customer)
+  console.log("custmr-dets", customer);
 };
 
 const handleInputChange = (field: keyof Customer, value: string | boolean) => {

@@ -1,15 +1,12 @@
 <template>
   <label class="w-full">
-    <div
-      class="mb-1 text-[var(--bice-blue)] text-sm leading-snug font-normal"
-    >
+    <div class="mb-1 text-[var(--bice-blue)] text-sm leading-snug font-normal">
       {{ label }}
       <span v-if="required">*</span>
     </div>
     <div class="relative flex items-center">
       <span
         v-if="icon && placement === 'start'"
-        @click="$emit('startIconClick')"
         class="absolute left-3 text-gray-500 cursor-pointer"
       >
         <component :is="icon" />
@@ -18,7 +15,7 @@
         :class="[
           icon && placement === 'start' ? 'pl-9' : '',
           variant === 'search' && 'bg-secondary',
-          variant === 'primary' && 'px-3'
+          variant === 'primary' && 'px-3',
         ]"
         :type="type"
         :placeholder="placeholder"
@@ -29,8 +26,7 @@
         spellCheck="false"
         autocomplete="on"
         class="w-full bg-secondary py-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none"
-        />
-        <!-- :value="modelValue" -->
+      />
     </div>
   </label>
 </template>
@@ -48,18 +44,12 @@ defineProps<{
   variant?: "primary" | "search";
   onChange?: (...args: any[]) => any;
   required?: boolean;
-  // modelValue: string;
 }>();
 
-// const emit = defineEmits(["startIconClick", "onChange", "update:modelValue"]);
 const emit = defineEmits(["startIconClick", "onChange"]);
 
 const handleOnChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;
-
-  // emit("update:modelValue", value)
   emit("onChange", value);
-  // console.log(value)
 };
-
 </script>

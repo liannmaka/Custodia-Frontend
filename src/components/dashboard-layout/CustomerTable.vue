@@ -24,18 +24,7 @@
           />
         </div>
         <div class="overflow-x-auto">
-          <Table
-            :columns="productTitles"
-            :data="filteredCustomers"
-          />
-            <!-- :render-cell="(rowIndex, columnKey, rowData) => {
-              if(columnKey === 'actions') {
-                return (
-                  <div>actions</div>
-                )
-              }
-              return rowData[columnKey];
-            }" -->
+          <Table :columns="productTitles" :data="filteredCustomers" />
         </div>
       </div>
     </div>
@@ -102,49 +91,6 @@ const productTitles = [
   {
     key: "actions",
     label: "ACTIONS",
-  },
-];
-
-const data = [
-  {
-    first_name: "Lilian",
-    last_name: "ogbuo",
-    email: "lilian@gmail.com",
-    phone_number: "07023456777",
-    state: "imo",
-    status: "active",
-  },
-  {
-    first_name: "Lilian",
-    last_name: "ogbuo",
-    email: "lilian@gmail.com",
-    phone_number: "07023456777",
-    state: "imo",
-    status: "active",
-  },
-  {
-    first_name: "Lilian",
-    last_name: "ogbuo",
-    email: "lilian@gmail.com",
-    phone_number: "07023456777",
-    state: "imo",
-    status: "active",
-  },
-  {
-    first_name: "Lilian",
-    last_name: "ogbuo",
-    email: "lilian@gmail.com",
-    phone_number: "07023456777",
-    state: "imo",
-    status: "active",
-  },
-  {
-    first_name: "Lilian",
-    last_name: "ogbuo",
-    email: "lilian@gmail.com",
-    phone_number: "07023456777",
-    state: "imo",
-    status: "active",
   },
 ];
 </script>
