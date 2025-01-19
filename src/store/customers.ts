@@ -11,7 +11,6 @@ export const useCustomerStore = defineStore(
 
     const setSearchTerm = (term: string) => {
       searchTerm.value = term;
-      console.log("Updated searchTerm in store:", searchTerm.value);
     };
   
     const matchSearch = (customer: CustomerDetails, term: string) => {
@@ -58,13 +57,18 @@ export const useCustomerStore = defineStore(
       );
     };
 
+    const getCustomerById = (id: string): CustomerDetails | undefined => {
+      return customers.value.find((customer) => customer.id === id);
+    };
+
     return {
       customers,
       filteredCustomers,
       addCustomer,
       updateCustomer,
       deleteCustomer,
-      setSearchTerm
+      setSearchTerm,
+      getCustomerById,
     };
   },
   {
