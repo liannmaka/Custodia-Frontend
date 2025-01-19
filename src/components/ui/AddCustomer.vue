@@ -78,7 +78,7 @@
             class="block text-sm font-medium text-gray-700 mb-1"
             >Customer Details</label
           >
-          <div ref="editor" class="min-h-32"></div>
+          <div ref="editor" class="w-full min-h-32"></div>
         </div>
 
         <div class="mt-12 lg:mt-16 mb-2 lg:mb-4 flex items-center space-x-4 lg:space-x-5">
@@ -243,42 +243,41 @@ const { errors, validateAll } = useValidation(formFields, customer);
 const editor = ref<HTMLDivElement | null>(null);
 
 onMounted(() => {
+  const id = route.params.id as string;
+  let customerDetails = customerStore.getCustomerById(id);
+
+  
   if (editor.value) {
     const quill = new Quill(editor.value, {
       theme: "snow",
       modules: {
         toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      ['link'],
-      [{ align: '' }, { align: 'center' }, { align: 'right' }]
-    ],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['link'],
+          [{ align: '' }, { align: 'center' }, { align: 'right' }]
+        ],
       },
     });
-
+    
     quill.root.innerHTML = customer.details;
-
+    
     quill.on("text-change", () => {
       customer.details = quill.root.innerHTML;
     });
+
+    if (customerDetails) quill.clipboard.dangerouslyPasteHTML(customerDetails.details);
   }
-});
-
-onMounted(() => {
-  const id = route.params.id as string;
-  let customerDetails = customerStore.getCustomerById(id);
-
-  customerId.value = customerDetails?.id ?? '';
-
+  
   if (customerDetails) {
-    // Prefill the reactive customer object with fetched customer data
+    customerId.value = customerDetails?.id ?? '';
+
     customer.first_name = customerDetails.first_name;
     customer.last_name = customerDetails.last_name;
     customer.email = customerDetails.email;
     customer.phone_number = customerDetails.phone_number;
     customer.state = customerDetails.state;
     customer.status = customerDetails.status;
-    customer.details = customerDetails.details;
   }
 });
 
