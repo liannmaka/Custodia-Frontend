@@ -13,6 +13,7 @@
       </span>
       <input
         :class="[
+          'w-full bg-secondary py-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none',
           icon && placement === 'start' ? 'pl-9' : '',
           variant === 'search' && 'bg-secondary',
           variant === 'primary' && 'px-3',
@@ -24,9 +25,8 @@
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck="false"
-        autocomplete="on"
-        class="w-full bg-secondary py-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none"
       />
+      <!-- :value="modelValue" -->
     </div>
   </label>
 </template>

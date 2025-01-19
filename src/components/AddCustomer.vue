@@ -3,7 +3,7 @@
     <h2 class="text-xl font-bold">Add Customer</h2>
     <form @submit.prevent="saveCustomer()">
       <div class="grid grid-cols-2 gap-4 pt-4">
-        <div v-for="field in formFields">
+        <div v-for="field in formFields" :key="field.label">
           <Input
             v-if="!field.renderSeparately"
             :key="field.id"
@@ -95,11 +95,8 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from "vue";
 import Quill from "quill";
-import "quill/dist/quill.snow.css";
-import Input from "./global/Input.vue";
-import EmailIcon from "./icons/EmailIcon.vue";
-import PhoneIcon from "./icons/PhoneIcon.vue";
-import PersonIcon from "./icons/PersonIcon.vue";
+import { Input } from "./global";
+import { EmailIcon ,PhoneIcon, PersonIcon } from "./icons";
 import { useCustomerStore } from "../store/customers";
 import type { CustomerDetails, FormField } from "../types/global";
 import { useValidation } from "./composition/validation";

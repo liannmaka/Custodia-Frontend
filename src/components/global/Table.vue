@@ -22,9 +22,21 @@
           <td
             v-for="column in columns"
             :key="column.key"
-            class="text-center py-5 px-4 border-b-[0.45px] border-black/10"
+            class='bg-secondary text-black/50 text-xs font-medium text-left py-3.5 px-4 uppercase tracking-[-0.03em]'
           >
-            {{ renderCellContent(idx, column.key, row) }}
+            <template v-if="column.key === 'actions'">
+              <div class="flex gap-2">
+                <button class="text-primary" @click="handleEdit(row)" aria-label="Edit customer">
+                  <EditIcon class="w-full h-full" />
+                </button>
+                <button class="text-red-500" @click="handleDelete(row)" aria-label="Delete customer">
+                  <DeleteIcon class="w-full h-full" />
+                </button>
+              </div>
+            </template>
+            <template v-else>
+              {{ renderCellContent(idx, column.key, row) }}
+            </template>
           </td>
         </tr>
       </template>
@@ -38,42 +50,47 @@
 </template>
 
 <script setup lang="ts">
-import type { JsxElement } from "typescript";
+import { EditIcon, DeleteIcon } from "../icons";
 
 interface Column {
   label: string;
   key: string;
 }
 
-// Identifiable interface for data rows
-interface Identifiable {
-  id?: string;
-  [key: string]: any;
+ // Identifiable interface for data rows
+export interface Identifiable {
+    id?: string;
+    [key: string]: any;
 }
 
-const { renderCell } = defineProps<{
-  columns: Column[];
-  data: Identifiable[];
-  renderCell?: (
-    rowIndex: number,
-    columnKey: string,
-    rowData: Identifiable
-  ) => string | number | null | JsxElement;
-  loadingData?: boolean;
-  loadingDataText?: string | null;
-  emptyText?: string;
-}>();
+const {renderCell, } = defineProps<{
+    columns: Column[];
+    data: Identifiable[];
+    renderCell?: (rowIndex: number, columnKey: string, rowData: Identifiable) => string | number | null;
+    loadingData?: boolean;
+    loadingDataText?: string | null;
+    emptyText?: string;
+  }>();
+  
+const emit = defineEmits<{
+    (e: 'edit', rowData: Identifiable): void;
+    (e: 'delete', rowData: Identifiable): void;
+  }>();
 
 // Render cell content function
-const renderCellContent = (
-  rowIndex: number,
-  columnKey: string,
-  rowData: Identifiable
-) => {
+const renderCellContent = (rowIndex: number, columnKey: string, rowData: Identifiable) => {
   if (typeof renderCell === "function") {
     return renderCell(rowIndex, columnKey, rowData) ?? "-";
   }
   return rowData[columnKey] ?? "-";
+};
+
+const handleEdit = (rowData: Identifiable) => {
+  emit('edit', rowData);
+};
+
+const handleDelete = (rowData: Identifiable) => {
+  emit('delete', rowData);
 };
 </script>
 
@@ -92,5 +109,9 @@ table tbody tr td {
   max-width: 15rem;
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+table tbody tr td button {
+  @apply w-4 h-4 hover:opacity-90 hover:-translate-y-0.5 transition-all ease-in-out duration-100;
 }
 </style>

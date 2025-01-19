@@ -16,7 +16,7 @@
       <div class="bg-white pt-8 px-4 md:px-6 lg:px-8">
         <div class="w-[300px] mb-2">
           <Input
-            v-model="searchTerm"
+            v-model="customerStore.searchTerm"
             placeholder="Search"
             :icon="SearchIcon"
             placement="start"
@@ -24,7 +24,11 @@
           />
         </div>
         <div class="overflow-x-auto">
-          <Table :columns="productTitles" :data="filteredCustomers" />
+          <Table
+            :columns="productTitles"
+            :data="customerStore.filteredCustomers"
+            @delete="handleDelete"
+          />
         </div>
       </div>
     </div>
@@ -43,15 +47,14 @@
 </template>
 
 <script setup lang="ts">
-import AddIcon from "../icons/AddIcon.vue";
-import Table from "../global/Table.vue";
-import AddCustomer from "../AddCustomer.vue";
-import Input from "../global/Input.vue";
-import SearchIcon from "../icons/SearchIcon.vue";
-import { useCustomerStore } from "../../store/customers";
 import { ref } from "vue";
+import { Table, Input } from "../global";
+import { SearchIcon, AddIcon } from "../icons";
+import AddCustomer from "../AddCustomer.vue";
+import { useCustomerStore } from "../../store/customers";
+import type { Identifiable } from "../global/Table.vue";
 
-const { searchTerm, filteredCustomers } = useCustomerStore();
+const customerStore = useCustomerStore();
 
 const addCustomer = ref(false);
 
@@ -61,6 +64,13 @@ const openAddCustomer = () => {
 
 const closeCustomer = () => {
   addCustomer.value = false;
+};
+
+const handleDelete = (rowData: Identifiable) => {
+  const customerId = rowData.id;
+  if (customerId) {
+    customerStore.deleteCustomer(customerId);
+  }
 };
 
 const productTitles = [
