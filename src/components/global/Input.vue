@@ -22,9 +22,6 @@
         :placeholder="placeholder"
         @input="handleOnChange"
         autoComplete="on"
-        autoCorrect="off"
-        autoCapitalize="off"
-        spellCheck="false"
       />
       <!-- :value="modelValue" -->
     </div>

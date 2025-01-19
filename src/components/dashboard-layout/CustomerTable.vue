@@ -16,11 +16,11 @@
       <div class="bg-white pt-8 px-4 md:px-6 lg:px-8">
         <div class="w-[300px] mb-2">
           <Input
-            v-model="customerStore.searchTerm"
             placeholder="Search"
             :icon="SearchIcon"
             placement="start"
             variant="search"
+            @input="(event: any) => handleSearchTerm('searchTerm', event.target.value)"
           />
         </div>
         <div class="overflow-x-auto">
@@ -28,6 +28,7 @@
             :columns="productTitles"
             :data="customerStore.filteredCustomers"
             @delete="handleDelete"
+           
           />
         </div>
       </div>
@@ -47,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch} from "vue";
 import { Table, Input } from "../global";
 import { SearchIcon, AddIcon } from "../icons";
 import AddCustomer from "../AddCustomer.vue";
@@ -55,6 +56,19 @@ import { useCustomerStore } from "../../store/customers";
 import type { Identifiable } from "../global/Table.vue";
 
 const customerStore = useCustomerStore();
+
+
+
+const searchTerm = ref("");
+
+    const handleSearchTerm = (key: string, value: string) => {
+      if (key === "searchTerm") {
+        searchTerm.value = value;
+      }
+      customerStore.setSearchTerm(value)
+    };
+
+console.log(searchTerm.value)
 
 const addCustomer = ref(false);
 

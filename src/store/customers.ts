@@ -9,30 +9,32 @@ export const useCustomerStore = defineStore(
     const customers = ref<CustomerDetails[]>([]);
     const searchTerm = ref("");
 
-    // Computed filtered customers based on the search term
-    const filteredCustomers = computed(() => {
-      if (!searchTerm.value) return customers.value;
+    const setSearchTerm = (term: string) => {
+      searchTerm.value = term;
+      console.log("Updated searchTerm in store:", searchTerm.value);
+    };
+  
+    const matchSearch = (customer: CustomerDetails, term: string) => {
+      const normalizedTerm = term.trim().toLowerCase().replace(/\s+/g, "");
+      const toMatch = (field: string) =>
+        field.toLowerCase().replace(/\s+/g, "");
+    
+      return (
+        toMatch(customer.first_name).includes(normalizedTerm) ||
+        toMatch(customer.last_name).includes(normalizedTerm) ||
+        toMatch(customer.email).includes(normalizedTerm) ||
+        customer.phone_number.replace(/\s+/g, "").includes(normalizedTerm) || 
+        toMatch(customer.state || "").includes(normalizedTerm) ||
+        toMatch(customer.status ? "active" : "inactive").includes(normalizedTerm)
+      );
+    };
+    
 
-      return customers.value.filter((customer) => {
-        return (
-          customer.first_name
-            .toLowerCase()
-            .includes(searchTerm.value.toLowerCase()) ||
-          customer.last_name
-            .toLowerCase()
-            .includes(searchTerm.value.toLowerCase()) ||
-          customer.email
-            .toLowerCase()
-            .includes(searchTerm.value.toLowerCase()) ||
-          customer.phone_number.includes(searchTerm.value) ||
-          (customer.state || "")
-            .toLowerCase()
-            .includes(searchTerm.value.toLowerCase()) ||
-          (customer.status ? "active" : "inactive")
-            .toLowerCase()
-            .includes(searchTerm.value.toLowerCase())
-        );
-      });
+    const filteredCustomers = computed(() => {
+      if (!searchTerm.value.trim()) return customers.value;
+      return customers.value.filter((customer) =>
+        matchSearch(customer, searchTerm.value)
+      );
     });
 
     // Actions
@@ -58,11 +60,11 @@ export const useCustomerStore = defineStore(
 
     return {
       customers,
-      searchTerm,
       filteredCustomers,
       addCustomer,
       updateCustomer,
       deleteCustomer,
+      setSearchTerm
     };
   },
   {
