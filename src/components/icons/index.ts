@@ -7,4 +7,5 @@ export { default as PersonIcon } from './PersonIcon.vue';
 export { default as PhoneIcon } from './PhoneIcon.vue';
 export { default as SearchIcon } from './SearchIcon.vue';
 export { default as UserIcon } from './UserIcon.vue';
-export { default as BackArrow} from './BackArrow.vue'
+export { default as BackArrow } from './BackArrow.vue'
+export { default as Menu } from './Menu.vue'
