@@ -1,81 +1,87 @@
 <template>
-  <div class="bg-white px-10 py-4">
+  <div class="bg-white px-5 lg:px-10 py-4">
     <div class="pt-6 rounded-lg">
       <h2 class="text-xl font-bold">{{ customerId ? 'Edit' : 'Add' }} Customer</h2>
       <form @submit.prevent="saveCustomer()">
-        <div class="grid grid-cols-2 gap-4 pt-4">
-          <div v-for="field in formFields" :key="field.label">
-            <Input
-              v-if="!field.renderSeparately"
-              :key="field.id"
-              :label="field.label"
-              :type="field.type"
-              :placeholder="field.placeholder"
-              :required="field.required"
-              :icon="field.icon"
-              :variant="field.variant"
-              :placement="
-                field.placement === 'start' ? field.placement : undefined
-              "
-              v-model="customer[field.model]"
-              :value="customer[field.model]"
-              @input="(event: any) => handleInputChange(field.model, event.target.value)"
-            />
-            <p
-              v-if="!field.renderSeparately && errors[field.model]"
-              class="text-red-500 text-xs mt-1"
-            >
-              {{ errors[field.model] }}
-            </p>
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+          <div
+            v-for="field in formFields"
+            :key="field.label"
+          >
 
-          <div v-if="formFields.find((field) => field.model === 'state')">
-            <label for="state" class="block text-sm font-medium text-gray-700"
-              >State</label
-            >
-            <select
-              v-model="customer.state"
-              id="state"
-              @change="handleInputChange('state', customer.state)"
-              class="mt-1 w-full bg-secondary py-3 px-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none"
-            >
-              <option disabled value="">Select State</option>
-              <option v-for="state in states" :key="state" :value="state">
-                {{ state }}
-              </option>
-            </select>
-            <p v-if="errors.state" class="text-red-500 text-xs mt-1">
-              {{ errors.state }}
-            </p>
-          </div>
-
-          <div v-if="formFields.find((field) => field.model === 'state')">
-            <label for="status" class="block text-sm font-medium text-gray-700"
-              >Status</label
-            >
-            <div class="flex items-center mt-1">
-              <input
-                id="status"
-                type="checkbox"
-                v-model="customer.status"
-                @change="handleInputChange('status', customer.status)"
-                class="h-4 w-4 text-primary border-gray-300 rounded"
+            <div v-if="['first_name', 'last_name', 'email', 'phone_number'].includes(field.model)">
+              <Input
+                :label="field.label"
+                :type="field.type"
+                :placeholder="field.placeholder"
+                :required="field.required"
+                :icon="field.icon"
+                :variant="field.variant"
+                :placement="
+                  field.placement === 'start' ? field.placement : undefined
+                "
+                :value="customer[field.model]"
+                @input="(event: any) => handleInputChange(field.model, event.target.value)"
               />
-              <label for="status" class="ml-2 block text-sm text-gray-900"
-                >Active</label
+              <p
+                v-if="!field.renderSeparately && errors[field.model]"
+                class="text-red-500 text-xs mt-1"
               >
+                {{ errors[field.model] }}
+              </p>
             </div>
-          </div>
-          <div class="col-span-2">
-            <label
-              for="customer-details"
-              class="block text-sm font-medium text-gray-700 mb-1"
-              >Customer Details</label
-            >
-            <div ref="editor"></div>
+
+            <div v-if="field.model === 'state'">
+              <label for="state" class="block text-sm font-medium text-gray-700"
+                >State</label
+              >
+              <select
+                v-model="customer.state"
+                id="state"
+                @change="handleInputChange('state', customer.state)"
+                class="mt-1 w-full bg-secondary py-3 px-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none"
+              >
+                <option disabled value="">Select State</option>
+                <option v-for="state in states" :key="state" :value="state">
+                  {{ state }}
+                </option>
+              </select>
+              <p v-if="errors.state" class="text-red-500 text-xs mt-1">
+                {{ errors.state }}
+              </p>
+            </div>
+
+            <div v-if="field.model === 'status'">
+              <label for="status" class="block text-sm font-medium text-gray-700"
+                >Status</label
+              >
+              <div class="flex items-center mt-1">
+                <input
+                  id="status"
+                  type="checkbox"
+                  v-model="customer.status"
+                  @change="handleInputChange('status', customer.status)"
+                  class="h-4 w-4 text-primary border-gray-300 rounded"
+                />
+                <label for="status" class="ml-2 block text-sm text-gray-900"
+                  >Active</label
+                >
+              </div>
+            </div>
+
           </div>
         </div>
-        <div class="mt-24 mb-3 flex items-center space-x-4 lg:space-x-5">
+
+        <div class="mt-2 col-span-2">
+          <label
+            for="customer-details"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Customer Details</label
+          >
+          <div ref="editor"></div>
+        </div>
+
+        <div class="mt-12 lg:mt-16 mb-2 lg:mb-4 flex items-center space-x-4 lg:space-x-5">
           <button
             class="bg-secondary text-black/75"
             @click="cancel"
@@ -96,7 +102,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive,toRefs } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import Quill from "quill";
 import { Input } from "../global";
