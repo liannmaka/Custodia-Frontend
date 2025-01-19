@@ -17,6 +17,7 @@
               :placement="
                 field.placement === 'start' ? field.placement : undefined
               "
+              v-model="customer[field.model]"
               :value="customer[field.model]"
               @input="(event: any) => handleInputChange(field.model, event.target.value)"
             />
@@ -95,7 +96,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, reactive } from "vue";
+import { ref, onMounted, reactive,toRefs } from "vue";
 import { useRoute } from "vue-router";
 import Quill from "quill";
 import { Input } from "../global";
@@ -121,6 +122,7 @@ const customer = reactive<CustomerDetails>({
   status: true,
   details: "",
 });
+
 
 const states = [
   "Abia",
@@ -261,7 +263,23 @@ onMounted(() => {
   let customerDetails = customerStore.getCustomerById(id);
 
   customerId.value = customerDetails?.id ?? '';
+
+  if (customerDetails) {
+    // Prefill the reactive customer object with fetched customer data
+    customer.first_name = customerDetails.first_name;
+    customer.last_name = customerDetails.last_name;
+    customer.email = customerDetails.email;
+    customer.phone_number = customerDetails.phone_number;
+    customer.state = customerDetails.state;
+    customer.status = customerDetails.status;
+    customer.details = customerDetails.details;
+
+  }
+
+  console.log('customerDetails', customerDetails)
 });
+
+
 
 const saveCustomer = () => {
   const isValid = validateAll();
