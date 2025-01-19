@@ -29,7 +29,7 @@
       </div>
     </div>
     <div class="pt-6 rounded-lg" v-if="addCustomer">
-      <AddCustomer @close-customer="closeCustomer" />
+      <AddCustomer @close-customer="closeCustomer" @customer-saved="closeCustomer"/>
     </div>
     <footer class="py-3">
       <span class="text-sm">Inspiration From: </span>

@@ -104,6 +104,7 @@ import { useCustomerStore } from "../store/customers";
 import type { CustomerDetails, FormField } from "../types/global";
 import { useValidation } from "./composition/validation";
 
+const emit = defineEmits(["customer-saved", "close-customer"]);
 export type Customer = typeof customer;
 
 const { addCustomer } = useCustomerStore();
@@ -236,9 +237,8 @@ onMounted(() => {
       theme: "snow",
       modules: {
         toolbar: [
-          ["bold", "italic", "underline"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["link", "image"],
+          ["bold", "italic"],
+          [{ list: "bullet" }]
         ],
       },
     });
@@ -257,6 +257,7 @@ const saveCustomer = () => {
     return;
   }
   addCustomer(customer);
+  emit('customer-saved');
   console.log("custmr-dets", customer);
 };
 
