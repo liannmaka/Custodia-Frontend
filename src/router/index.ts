@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { AddCustomer } from '../components/ui';
-import CustomerTable from '../components/dashboard-layout/CustomerTable.vue';
+import { CustomerTable, AddCustomer } from '../components/ui';
 
 const routes = [
   {
@@ -9,7 +8,6 @@ const routes = [
   },
   {
     path: '/customers',
-    // component: CustomerTable,
     children: [
       {
         path: '',
