@@ -4,8 +4,17 @@
       <Header />
       <div class="w-full h-full flex mt-20 overflow-hidden">
         <SideBar :active="active" @close-sidebar="handleSidebarToggle"/>
-        <div class="w-full h-full bg-secondary">
-          <div class="space-pad w-full h-[calc(100%-2rem)] overflow-auto">
+        <div class="relative w-full h-full bg-secondary">
+          <button
+            :class="[
+              'lg:hidden fixed top-24 left-6 py-0.5 px-1 text-primary bg-primary/10 rounded-sm',
+              active && 'hidden',
+            ]"
+            @click="handleSidebarToggle"
+          >
+            <Menu class="w-5 h-5" />
+          </button>
+          <div class="space-pad mt-8 lg:mt-0 w-full h-[calc(100%-2rem)] overflow-auto">
             <router-view />
           </div>
           <footer class="py-1 px-5 lg:px-7 h-8 text-[0.625rem] flex items-center justify-end space-x-0.5">
@@ -25,8 +34,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Header, SideBar } from "./components/global";
+import { Menu } from "./components/icons";
 
-const active = ref<boolean>(true)
+const active = ref<boolean>(false)
 
 const handleSidebarToggle = () => {
   active.value = !active.value;
