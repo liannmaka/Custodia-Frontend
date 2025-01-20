@@ -10,5 +10,5 @@
 </template>
 
 <script setup lang="ts">
-import ChipIcon from "../icons/ChipIcon.vue";
+import { ChipIcon } from "../icons";
 </script>

@@ -1,6 +1,6 @@
 <template>
   <label class="w-full">
-    <div class="mb-1 text-[var(--bice-blue)] text-sm leading-snug font-normal">
+    <div class="mb-1 text-sm leading-snug font-normal">
       {{ label }}
       <span v-if="required">*</span>
     </div>
@@ -32,7 +32,6 @@
 import type { Component } from "vue";
 
 defineProps<{
-  className?: string;
   label?: string;
   placeholder?: string;
   icon?: Component;

@@ -6,12 +6,14 @@ export function useValidation(
   formData: Record<string, any>
 ) {
   const errors = ref<Record<string, string | null>>({});
+  const touched = ref<Record<string, boolean>>({});
 
   formFields.forEach((field) => {
     errors.value[field.model] = null;
+    touched.value[field.model] = false;
   });
 
-  const validateField = (field: FormField, value: any) => {
+  const validateField = (field: FormField, value: any): string | null => {
     if (field.required && !value) {
       return `${field.label} is required.`;
     }
@@ -28,23 +30,28 @@ export function useValidation(
     return null;
   };
 
-  const validateAll = (): boolean => {
-    let isValid = true;
+  const validateOnInput = (model: string, value: any): void => {
+    const field = formFields.find((f) => f.model === model);
+    if (field) {
+      errors.value[model] = validateField(field, value);
+      touched.value[model] = true;
+    }
+  };
 
+  const validateOnSubmit = (): boolean => {
+    let isValid = true;
     formFields.forEach((field) => {
       const error = validateField(field, formData[field.model]);
       errors.value[field.model] = error;
-      if (error) {
-        isValid = false;
-      }
+      touched.value[field.model] = true;
+      if (error) isValid = false;
     });
-
     return isValid;
   };
 
   return {
     errors,
-    validateField,
-    validateAll,
+    validateOnInput,
+    validateOnSubmit,
   };
 }
