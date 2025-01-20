@@ -299,8 +299,6 @@ const saveCustomer = () => {
     customerStore.addCustomer(customer);
   }
 
-  console.log('saved', customer)
-
   router.push("/customers");
 };
 
