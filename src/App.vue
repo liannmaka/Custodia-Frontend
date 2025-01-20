@@ -22,6 +22,7 @@
             <a
               class="text-primary"
               href="https://www.behance.net/gallery/211291667/user-management-%28-UI-design-%29#"
+              target="_blank" rel="noopener noreferrer"
               >Behance</a
             >
           </footer>
