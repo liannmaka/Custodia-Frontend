@@ -64,7 +64,7 @@
                   class="h-4 w-4 text-primary border-gray-300 rounded"
                 />
                 <label for="status" class="ml-2 block text-sm text-gray-900"
-                  >Active</label
+                  >{{ customer.status ? 'Active' : 'Inactive' }}</label
                 >
               </div>
             </div>
@@ -128,7 +128,6 @@ const customer = reactive<CustomerDetails>({
   status: true,
   details: "",
 });
-
 
 const states = [
   "Abia",
@@ -276,7 +275,7 @@ onMounted(() => {
     customer.email = customerDetails.email;
     customer.phone_number = customerDetails.phone_number;
     customer.state = customerDetails.state;
-    customer.status = customerDetails.status;
+    customerDetails.status === 'Inactive' ? customer.status = false : true;
   }
 });
 
@@ -288,11 +287,19 @@ const saveCustomer = () => {
     return;
   }
 
+  if(customer.status) {
+    customer.status = 'Active'
+  } else {
+    customer.status = 'Inactive'
+  }
+
   if(customerId.value) {
     customerStore.updateCustomer(customerId.value, customer);
   } else {
     customerStore.addCustomer(customer);
   }
+
+  console.log('saved', customer)
 
   router.push("/customers");
 };
