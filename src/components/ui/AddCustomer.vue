@@ -271,7 +271,6 @@ onMounted(() => {
   customerId.value = customerDetails?.id ?? '';
 
   if (customerDetails) {
-    // Prefill the reactive customer object with fetched customer data
     customer.first_name = customerDetails.first_name;
     customer.last_name = customerDetails.last_name;
     customer.email = customerDetails.email;
