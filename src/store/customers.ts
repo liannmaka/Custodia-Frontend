@@ -12,22 +12,23 @@ export const useCustomerStore = defineStore(
     const setSearchTerm = (term: string) => {
       searchTerm.value = term;
     };
-  
+
     const matchSearch = (customer: CustomerDetails, term: string) => {
       const normalizedTerm = term.trim().toLowerCase().replace(/\s+/g, "");
       const toMatch = (field: string) =>
         field.toLowerCase().replace(/\s+/g, "");
-    
+
       return (
         toMatch(customer.first_name).includes(normalizedTerm) ||
         toMatch(customer.last_name).includes(normalizedTerm) ||
         toMatch(customer.email).includes(normalizedTerm) ||
-        customer.phone_number.replace(/\s+/g, "").includes(normalizedTerm) || 
+        customer.phone_number.replace(/\s+/g, "").includes(normalizedTerm) ||
         toMatch(customer.state || "").includes(normalizedTerm) ||
-        toMatch(customer.status ? "active" : "inactive").includes(normalizedTerm)
+        toMatch(customer.status ? "active" : "inactive").includes(
+          normalizedTerm
+        )
       );
     };
-    
 
     const filteredCustomers = computed(() => {
       if (!searchTerm.value.trim()) return customers.value;

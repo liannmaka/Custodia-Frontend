@@ -22,14 +22,22 @@
           <td
             v-for="column in columns"
             :key="column.key"
-            class='bg-secondary text-black/50 text-xs font-medium text-left py-3.5 px-4 tracking-[-0.03em]'
+            class="bg-secondary text-black/50 text-xs font-medium text-left py-3.5 px-4 tracking-[-0.03em]"
           >
             <template v-if="column.key === 'actions'">
               <div class="flex gap-2">
-                <button class="text-primary" @click="handleEdit(row)" aria-label="Edit customer">
+                <button
+                  class="text-primary"
+                  @click="handleEdit(row)"
+                  aria-label="Edit customer"
+                >
                   <EditIcon class="w-full h-full" />
                 </button>
-                <button class="text-red-500" @click="handleDelete(row)" aria-label="Delete customer">
+                <button
+                  class="text-red-500"
+                  @click="handleDelete(row)"
+                  aria-label="Delete customer"
+                >
                   <DeleteIcon class="w-full h-full" />
                 </button>
               </div>
@@ -57,40 +65,48 @@ interface Column {
   key: string;
 }
 
- // Identifiable interface for data rows
+// Identifiable interface for data rows
 export interface Identifiable {
-    id?: string;
-    [key: string]: any;
+  id?: string;
+  [key: string]: any;
 }
 
-const {renderCell, } = defineProps<{
-    columns: Column[];
-    data: Identifiable[];
-    renderCell?: (rowIndex: number, columnKey: string, rowData: Identifiable) => string | number | null;
-    loadingData?: boolean;
-    loadingDataText?: string | null;
-    emptyText?: string;
-  }>();
-  
+const { renderCell } = defineProps<{
+  columns: Column[];
+  data: Identifiable[];
+  renderCell?: (
+    rowIndex: number,
+    columnKey: string,
+    rowData: Identifiable
+  ) => string | number | null;
+  loadingData?: boolean;
+  loadingDataText?: string | null;
+  emptyText?: string;
+}>();
+
 const emit = defineEmits<{
-    (e: 'edit', rowData: Identifiable): void;
-    (e: 'delete', rowData: Identifiable): void;
-  }>();
+  (e: "edit", rowData: Identifiable): void;
+  (e: "delete", rowData: Identifiable): void;
+}>();
+
+const handleEdit = (rowData: Identifiable) => {
+  emit("edit", rowData);
+};
+
+const handleDelete = (rowData: Identifiable) => {
+  emit("delete", rowData);
+};
 
 // Render cell content function
-const renderCellContent = (rowIndex: number, columnKey: string, rowData: Identifiable) => {
+const renderCellContent = (
+  rowIndex: number,
+  columnKey: string,
+  rowData: Identifiable
+) => {
   if (typeof renderCell === "function") {
     return renderCell(rowIndex, columnKey, rowData) ?? "-";
   }
   return rowData[columnKey] ?? "-";
-};
-
-const handleEdit = (rowData: Identifiable) => {
-  emit('edit', rowData);
-};
-
-const handleDelete = (rowData: Identifiable) => {
-  emit('delete', rowData);
 };
 </script>
 

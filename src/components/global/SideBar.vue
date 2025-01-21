@@ -38,25 +38,18 @@
 </template>
 
 <script setup lang="ts">
-import type { Component } from "vue";
 import { BackArrow, UserIcon } from "../icons";
+import { type DashboardMenu } from "../../types/global";
 
 defineProps<{
-  active: boolean
+  active: boolean;
 }>();
 
 const emit = defineEmits(["close-sidebar"]);
 
-
 const handleCloseSidebar = () => {
-emit("close-sidebar")
-}
-
-interface DashboardMenu {
-  name: string;
-  route: string;
-  icon: Component;
-}
+  emit("close-sidebar");
+};
 
 const dashBoardMenu: Array<DashboardMenu> = [
   {

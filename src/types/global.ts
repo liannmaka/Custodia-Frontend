@@ -29,3 +29,9 @@ export interface FormField {
   customValidationMessage?: string;
   renderSeparately?: boolean;
 }
+
+export interface DashboardMenu {
+  name: string;
+  route: string;
+  icon: Component;
+}

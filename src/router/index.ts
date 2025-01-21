@@ -1,35 +1,38 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { CustomerTable, AddCustomer } from '../components/ui';
+import { createRouter, createWebHistory } from "vue-router";
+import { CustomerTable, AddCustomer } from "../components/ui";
 
 const routes = [
   {
-    path: '/',
-    redirect: '/customers',
+    path: "/",
+    redirect: "/customers",
   },
   {
-    path: '/customers',
+    path: "/customers",
     children: [
       {
-        path: '',
-        name: 'CustomerHome',
+        path: "",
+        name: "CustomerHome",
         component: CustomerTable,
-        props: { mode: 'home' },
+        props: { mode: "home" },
       },
       {
-        path: 'add-customer',
-        name: 'AddCustomer',
+        path: "add-customer",
+        name: "AddCustomer",
         component: AddCustomer,
-        props: { mode: 'add' },
+        props: { mode: "add" },
       },
       {
-        path: 'edit-customer/:id',
-        name: 'EditCustomer',
+        path: "edit-customer/:id",
+        name: "EditCustomer",
         component: AddCustomer,
-        props: (route: { params: { id: any; }; }) => ({ mode: 'edit', customerId: route.params.id }),
+        props: (route: { params: { id: any } }) => ({
+          mode: "edit",
+          customerId: route.params.id,
+        }),
       },
     ],
   },
-]
+];
 
 const router = createRouter({
   history: createWebHistory(),
