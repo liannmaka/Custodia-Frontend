@@ -8,7 +8,7 @@ export interface CustomerDetails {
   email: string;
   phone_number: string;
   state: string;
-  status: boolean | string;
+  status: boolean;
   details: string;
 }
 

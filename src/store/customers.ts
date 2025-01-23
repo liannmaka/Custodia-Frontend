@@ -24,7 +24,7 @@ export const useCustomerStore = defineStore(
         toMatch(customer.email).includes(normalizedTerm) ||
         customer.phone_number.replace(/\s+/g, "").includes(normalizedTerm) ||
         toMatch(customer.state || "").includes(normalizedTerm) ||
-        toMatch(customer.status ? "active" : "inactive").includes(
+        toMatch(customer.status ? "active" : "inactive").startsWith(
           normalizedTerm
         )
       );

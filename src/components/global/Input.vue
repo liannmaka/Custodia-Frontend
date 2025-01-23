@@ -43,7 +43,7 @@ defineProps<{
   required?: boolean;
 }>();
 
-const emit = defineEmits(["startIconClick", "onChange"]);
+const emit = defineEmits(["onChange"]);
 
 const handleOnChange = (event: Event) => {
   const value = (event.target as HTMLInputElement).value;

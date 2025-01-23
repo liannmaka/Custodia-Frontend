@@ -1,10 +1,10 @@
 import { ref } from "vue";
 import { type FormField } from "../../types/global";
 
-export function useValidation(
+export const useValidation = (
   formFields: FormField[],
   formData: Record<string, any>
-) {
+) => {
   const errors = ref<Record<string, string | null>>({});
   const touched = ref<Record<string, boolean>>({});
 
@@ -54,4 +54,4 @@ export function useValidation(
     validateOnInput,
     validateOnSubmit,
   };
-}
+};

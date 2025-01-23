@@ -6,24 +6,19 @@
       !active && 'min-w-0 w-0 lg:w-auto lg:min-w-64',
     ]"
   >
-    <nav class="relative w-full h-[87.5%] text-[#7d899f]">
+    <nav class="relative w-full h-[87.5%] text-[#7d899f] font-semibold">
       <ul
         class="w-full h-full flex flex-col space-y-2 px-4 py-4 lg:py-6 xl:py-8"
       >
         <li
-          v-for="item in dashBoardMenu"
-          :key="item.name"
-          :class="{
-            'bg-secondary text-primary font-semibold rounded-md':
-              item.name === 'Customers',
-          }"
-          class="flex items-center py-0.5 pl-3"
+          v-for="link in dashBoardMenu"
+          :key="link.name"
         >
-          <RouterLink to="/customers" class="w-full h-full flex items-center">
+          <RouterLink to="/customers" class="w-full h-full flex items-center pl-3 py-0.5" active-class="bg-secondary text-primary rounded-md">
             <span>
-              <component :is="item.icon" />
+              <component :is="link.icon" />
             </span>
-            <a :href="item.route" class="block px-4 py-2">{{ item.name }}</a>
+            <a :href="link.route" class="block px-4 py-2">{{ link.name }}</a>
           </RouterLink>
         </li>
       </ul>
@@ -51,10 +46,10 @@ const handleCloseSidebar = () => {
   emit("close-sidebar");
 };
 
-const dashBoardMenu: Array<DashboardMenu> = [
+const dashBoardMenu: DashboardMenu[] = [
   {
     name: "Customers",
-    route: "/",
+    route: "/customers",
     icon: UserIcon,
   },
 ];

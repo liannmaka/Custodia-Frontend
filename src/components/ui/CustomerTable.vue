@@ -25,7 +25,7 @@
       <div class="overflow-x-auto">
         <Table
           :columns="productTitles"
-          :data="customerStore.filteredCustomers"
+          :data="formattedCustomers"
           @edit="handleEdit"
           @delete="handleDelete"
         />
@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { Table, Input } from "../global";
 import { SearchIcon, AddIcon } from "../icons";
@@ -46,6 +46,14 @@ const router = useRouter();
 const customerStore = useCustomerStore();
 
 const searchTerm = ref("");
+
+
+const formattedCustomers = computed(() =>
+  customerStore.filteredCustomers.map((customer) => ({
+    ...customer,
+    status: customer.status ? "Active" : "Inactive",
+  }))
+);
 
 const handleSearchTerm = (key: string, value: string) => {
   if (key === "searchTerm") {
@@ -99,5 +107,3 @@ const productTitles = [
   },
 ];
 </script>
-
-<style scoped></style>

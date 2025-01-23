@@ -6,7 +6,7 @@
       </h2>
       <form @submit.prevent="saveCustomer()">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-          <div v-for="field in formFields" :key="field.label">
+          <div v-for="field in formFields" :key="field.id">
             <div
               v-if="
                 ['first_name', 'last_name', 'email', 'phone_number'].includes(
@@ -45,7 +45,11 @@
                 class="mt-1 w-full bg-secondary py-3 px-3 text-xs lg:text-sm rounded-md border-[1.5px] border-[#ccc] focus:ring-[#ccc] focus:ring-2 outline-none"
               >
                 <option disabled value="">Select State</option>
-                <option v-for="state in states" :key="state" :value="state">
+                <option
+                  v-for="state in nigerianStates"
+                  :key="state"
+                  :value="state"
+                >
                   {{ state }}
                 </option>
               </select>
@@ -104,13 +108,14 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
-import Quill from "quill";
 import { Input } from "../global";
 import { EmailIcon, PhoneIcon, PersonIcon } from "../icons";
 import { useCustomerStore } from "../../store/customers";
 import type { CustomerDetails, FormField } from "../../types/global";
 import { useValidation } from "../composition/validation";
+import { nigerianStates } from "../composition/getNigerianStates";
 import router from "../../router";
+import Quill from "quill";
 
 export type Customer = typeof customer;
 
@@ -165,49 +170,9 @@ onMounted(() => {
     customer.email = customerDetails.email;
     customer.phone_number = customerDetails.phone_number;
     customer.state = customerDetails.state;
-    customerDetails.status === "Inactive" ? (customer.status = false) : true;
+    customer.status = customerDetails.status;
   }
 });
-
-const states = [
-  "Abia",
-  "Adamawa",
-  "Akwa Ibom",
-  "Anambra",
-  "Bauchi",
-  "Bayelsa",
-  "Benue",
-  "Borno",
-  "Cross River",
-  "Delta",
-  "Ebonyi",
-  "Edo",
-  "Ekiti",
-  "Enugu",
-  "FCT - Abuja",
-  "Gombe",
-  "Imo",
-  "Jigawa",
-  "Kaduna",
-  "Kano",
-  "Katsina",
-  "Kebbi",
-  "Kogi",
-  "Kwara",
-  "Lagos",
-  "Nasarawa",
-  "Niger",
-  "Ogun",
-  "Ondo",
-  "Osun",
-  "Oyo",
-  "Plateau",
-  "Rivers",
-  "Sokoto",
-  "Taraba",
-  "Yobe",
-  "Zamfara",
-];
 
 const formFields: FormField[] = [
   {
@@ -263,7 +228,7 @@ const formFields: FormField[] = [
     label: "State",
     type: "select",
     required: true,
-    options: states,
+    options: nigerianStates,
     variant: "primary",
     renderSeparately: true,
   },
@@ -285,12 +250,6 @@ const { errors, validateOnInput, validateOnSubmit } = useValidation(
 
 const saveCustomer = () => {
   if (validateOnSubmit()) {
-    if (customer.status) {
-      customer.status = "Active";
-    } else {
-      customer.status = "Inactive";
-    }
-
     if (customerId.value) {
       customerStore.updateCustomer(customerId.value, customer);
     } else {
