@@ -1,11 +1,11 @@
 <template>
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    fill="none"
+    :fill="fill"
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="currentColor"
-    class="size-6"
+    :class="class"
   >
     <path
       stroke-linecap="round"
@@ -14,3 +14,16 @@
     />
   </svg>
 </template>
+
+<script setup lang="ts">
+defineProps({
+  fill: {
+    type: String,
+    default: 'currentColor',
+  },
+  class: {
+    type: String,
+    default: 'size-6'
+  }
+})
+</script>

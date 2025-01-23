@@ -10,15 +10,16 @@
       <ul
         class="w-full h-full flex flex-col space-y-2 px-4 py-4 lg:py-6 xl:py-8"
       >
-        <li
-          v-for="link in dashBoardMenu"
-          :key="link.name"
-        >
-          <RouterLink to="/customers" class="w-full h-full flex items-center pl-3 py-0.5" active-class="bg-secondary text-primary rounded-md">
-            <span>
-              <component :is="link.icon" />
-            </span>
-            <a :href="link.route" class="block px-4 py-2">{{ link.name }}</a>
+        <li v-for="(link, index) in dashBoardMenu" :key="index">
+          <RouterLink
+            :to="link.route"
+            :class="[
+              'w-full h-full flex items-center pl-3 py-0.5 hover:bg-secondary text-primary hover:rounded-md',
+              route.path === link.route ? 'bg-secondary rounded-md' : '',
+            ]"
+          >
+            <component :is="link.icon" />
+            <span class="block px-2 py-2">{{ link.name }}</span>
           </RouterLink>
         </li>
       </ul>
@@ -35,12 +36,14 @@
 <script setup lang="ts">
 import { BackArrow, UserIcon } from "../icons";
 import { type DashboardMenu } from "../../types/global";
+import { useRoute } from "vue-router";
 
 defineProps<{
   active: boolean;
 }>();
 
 const emit = defineEmits(["close-sidebar"]);
+const route = useRoute();
 
 const handleCloseSidebar = () => {
   emit("close-sidebar");
