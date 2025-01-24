@@ -37,10 +37,10 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { Table, Input } from "../global";
-import { SearchIcon, AddIcon } from "../icons";
-import { useCustomerStore } from "../../store/customers";
-import type { Identifiable } from "../global/Table.vue";
+import { Table, Input } from "../components/global";
+import { SearchIcon, AddIcon } from "../components/icons";
+import { useCustomerStore } from "../store/customers";
+import { type Identifiable } from "../components/global/Table.vue";
 
 const router = useRouter();
 const customerStore = useCustomerStore();

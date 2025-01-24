@@ -108,13 +108,13 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
-import { Input } from "../global";
-import { EmailIcon, PhoneIcon, PersonIcon } from "../icons";
-import { useCustomerStore } from "../../store/customers";
-import type { CustomerDetails, FormField } from "../../types/global";
-import { useValidation } from "../composition/validation";
-import { nigerianStates } from "../composition/getNigerianStates";
-import router from "../../router";
+import { Input } from "../components/global";
+import { EmailIcon, PhoneIcon, PersonIcon } from "../components/icons";
+import { useCustomerStore } from "../store/customers";
+import type { CustomerDetails, FormField } from "../types/global";
+import { useValidation } from "../components/composition/validation";
+import { nigerianStates } from "../components/composition/getNigerianStates";
+import router from "../router";
 import Quill from "quill";
 
 export type Customer = typeof customer;
