@@ -1,10 +1,10 @@
 <template>
   <main class="bg-secondary w-full h-full">
-    <div class="flex justify-between mb-6 lg:mb-8">
-      <h1 class="text-2xl font-bold">Customers</h1>
+    <div class="flex flex-col mb-6 sm:flex-row sm:justify-between lg:mb-8">
+      <h1 class="text-2xl font-bold sm:self-center">Customers</h1>
       <RouterLink
         to="/customers/add-customer"
-        class="flex text-sm lg:text-base items-center gap-1 bg-primary py-3 px-4 rounded-md text-white cursor-pointer"
+        class="w-36 flex text-sm items-center gap-1 bg-primary py-3 px-4 rounded-md text-white cursor-pointer mt-3 sm:mt-0 sm:w-auto lg:text-base"
       >
         <span class="self-center">
           <AddIcon />
@@ -13,7 +13,7 @@
       </RouterLink>
     </div>
     <div class="bg-white pt-8 px-4 md:px-6 lg:px-8">
-      <div class="w-[300px] mb-2">
+      <div class="w-56 mb-2 sm:w-80">
         <Input
           placeholder="Search"
           :icon="SearchIcon"
@@ -28,7 +28,14 @@
           :data="formattedCustomers"
           @edit="handleEdit"
           @delete="handleDelete"
-        />
+        >
+          <template #emptyText>
+            <div class="flex flex-col justify-center items-center ">
+              <NoDataSvg class="w-44 h-auto text-primary"/>
+              <span class="my-3 text-base md:text-lg lg:text-xl">No data available</span>
+            </div>
+          </template>
+        </Table>
       </div>
     </div>
   </main>
@@ -41,12 +48,12 @@ import { Table, Input } from "../components/global";
 import { SearchIcon, AddIcon } from "../components/icons";
 import { useCustomerStore } from "../store/customers";
 import { type Identifiable } from "../components/global/Table.vue";
+import NoDataSvg from "../components/svg/NoDataSvg.vue";
 
 const router = useRouter();
 const customerStore = useCustomerStore();
 
 const searchTerm = ref("");
-
 
 const formattedCustomers = computed(() =>
   customerStore.filteredCustomers.map((customer) => ({

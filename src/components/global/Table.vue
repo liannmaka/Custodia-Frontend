@@ -49,8 +49,8 @@
         </tr>
       </template>
       <tr v-else>
-        <td class="w-full text-center p-8" :colspan="columns.length">
-          <slot name="emptyText">No data available</slot>
+        <td class="w-full text-center" :colspan="columns.length">
+          <slot name="emptyText">{{ emptyText }}</slot>
         </td>
       </tr>
     </tbody>
