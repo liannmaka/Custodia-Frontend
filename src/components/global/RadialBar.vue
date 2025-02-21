@@ -41,8 +41,7 @@ const options = {
     radialBar: {
       dataLabels: {
         name: {
-          fontSize: "12px",
-          color: "#494f51",
+          fontSize: "12px"
         },
         value: {
           fontSize: "12px",
