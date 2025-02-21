@@ -1,10 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { CustomerTable, AddCustomer } from "../views";
+import { CustomerTable, AddCustomer, Dashboard, NotFound } from "../views";
 
 const routes = [
+  // {
+  //   path: "/",
+  //   redirect: "/customers",
+  // },
   {
     path: "/",
-    redirect: "/customers",
+    name:"Dashboard",
+    component: Dashboard
   },
   {
     path: "/customers",
@@ -13,7 +18,7 @@ const routes = [
         path: "",
         name: "CustomerHome",
         component: CustomerTable,
-        props: { mode: "home" },
+        props: { mode: "customers" },
       },
       {
         path: "add-customer",
@@ -32,6 +37,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/:pathMatch(.*)*',
+    name: "NotFound",
+    component: NotFound
+  }
 ];
 
 const router = createRouter({

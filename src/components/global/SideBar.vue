@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { BackArrow, UserIcon } from "../icons";
+import { BackArrow, UserIcon, HomeIcon} from "../icons";
 import { type DashboardMenu } from "../../types/global";
 import { useRoute } from "vue-router";
 
@@ -51,9 +51,14 @@ const handleCloseSidebar = () => {
 
 const dashBoardMenu: DashboardMenu[] = [
   {
+    name: "Dashboard",
+    route: "/",
+    icon: HomeIcon,
+  },
+  {
     name: "Customers",
     route: "/customers",
     icon: UserIcon,
-  },
+  }
 ];
 </script>

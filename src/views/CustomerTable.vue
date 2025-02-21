@@ -24,7 +24,7 @@
       </div>
       <div class="overflow-x-auto">
         <Table
-          :columns="productTitles"
+          :columns="customerHeaders"
           :data="formattedCustomers"
           @edit="handleEdit"
           @delete="handleDelete"
@@ -49,6 +49,7 @@ import { SearchIcon, AddIcon } from "../components/icons";
 import { useCustomerStore } from "../store/customers";
 import { type Identifiable } from "../components/global/Table.vue";
 import NoDataSvg from "../components/svg/NoDataSvg.vue";
+import { customerHeaders } from "../components/lib/data/getTableData";
 
 const router = useRouter();
 const customerStore = useCustomerStore();
@@ -82,35 +83,4 @@ const handleDelete = (rowData: Identifiable) => {
     customerStore.deleteCustomer(customerId);
   }
 };
-
-const productTitles = [
-  {
-    key: "first_name",
-    label: "first name",
-  },
-  {
-    key: "last_name",
-    label: "last name",
-  },
-  {
-    key: "email",
-    label: "email",
-  },
-  {
-    key: "phone_number",
-    label: "phone number",
-  },
-  {
-    key: "state",
-    label: "state",
-  },
-  {
-    key: "status",
-    label: "status",
-  },
-  {
-    key: "actions",
-    label: "ACTIONS",
-  },
-];
 </script>

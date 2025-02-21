@@ -10,6 +10,9 @@ export default {
         'primary': '#5b42db',
         'secondary': '#f5f6fa',
       },
+      fontFamily: {
+        jetbrains: ["'JetBrains Mono'","monospace"],
+      },
     },
   },
   plugins: [],

@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { type FormField } from "../../types/global";
+import { type FormField } from "../../../types/global";
 
 export const useValidation = (
   formFields: FormField[],

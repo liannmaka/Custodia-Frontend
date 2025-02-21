@@ -36,6 +36,11 @@ a {
   text-decoration: none;
 }
 
+.apexcharts-tooltip-marker {
+  transform: scale(0.7) !important;
+  transform-origin: center !important;
+}
+
 @layer utilities {
   .space-pad {
     @apply py-4 px-6 lg:py-6 lg:px-7 xl:py-8 xl:px-8;

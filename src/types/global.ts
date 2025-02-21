@@ -10,6 +10,7 @@ export interface CustomerDetails {
   state: string;
   status: boolean;
   details: string;
+  created_at?: string
 }
 
 export interface FormField {
@@ -34,4 +35,14 @@ export interface DashboardMenu {
   name: string;
   route: string;
   icon: Component;
+}
+
+export interface CardData {
+  cardHeading: string;
+  value: string;
+  icon: Component;
+  iconStyle?: string;
+  metricsPercent?: string;
+  metricsColor?: string;
+  metricsIcon?: Component; 
 }

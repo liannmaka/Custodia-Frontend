@@ -112,8 +112,8 @@ import { Input } from "../components/global";
 import { EmailIcon, PhoneIcon, PersonIcon } from "../components/icons";
 import { useCustomerStore } from "../store/customers";
 import type { CustomerDetails, FormField } from "../types/global";
-import { useValidation } from "../components/composition/validation";
-import { nigerianStates } from "../components/composition/getNigerianStates";
+import { useValidation } from "../components/lib/utils/validation";
+import { nigerianStates } from "../components/lib/data/getNigerianStates";
 import router from "../router";
 import Quill from "quill";
 
@@ -129,6 +129,7 @@ const customer = reactive<CustomerDetails>({
   state: "",
   status: true,
   details: "",
+  created_at: ""
 });
 
 const route = useRoute();
@@ -253,9 +254,11 @@ const saveCustomer = () => {
     if (customerId.value) {
       customerStore.updateCustomer(customerId.value, customer);
     } else {
+      customer.created_at = new Date().toISOString();
       customerStore.addCustomer(customer);
     }
 
+  console.log('add',customer )
     router.push("/customers");
   }
 };
