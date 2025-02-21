@@ -30,9 +30,9 @@
           @delete="handleDelete"
         >
           <template #emptyText>
-            <div class="flex flex-col justify-center items-center ">
-              <NoDataSvg class="w-44 h-auto text-primary"/>
-              <span class="my-3 text-base md:text-lg lg:text-xl">No data available</span>
+            <div class="flex flex-col justify-center items-center">
+              <NoDataSvg class="w-36 h-auto text-primary"/>
+              <span class="my-3 text-base text-[#263238]">No data available</span>
             </div>
           </template>
         </Table>

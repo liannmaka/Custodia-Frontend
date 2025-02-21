@@ -7,7 +7,7 @@
         <div class="relative w-full h-full bg-secondary">
           <button
             :class="[
-              'lg:hidden fixed top-24 left-6 py-0.5 px-1 text-primary bg-primary/10 rounded-sm',
+              'lg:hidden fixed top-24 left-6 py-0.5 px-1 text-primary bg-primary/10 rounded-sm z-10 backdrop-blur-sm',
               active && 'hidden',
             ]"
             @click="handleSidebarToggle"
