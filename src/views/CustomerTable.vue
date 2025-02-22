@@ -42,16 +42,19 @@
 </template>
 
 <script setup lang="ts">
+import NoDataSvg from "../components/svg/NoDataSvg.vue";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { Table, Input } from "../components/global";
 import { SearchIcon, AddIcon } from "../components/icons";
 import { useCustomerStore } from "../store/customers";
 import { type Identifiable } from "../components/global/Table.vue";
-import NoDataSvg from "../components/svg/NoDataSvg.vue";
 import { customerHeaders } from "../components/lib/data/getTableData";
+import { useToast } from "vue-toastification";
+
 
 const router = useRouter();
+const toast = useToast();
 const customerStore = useCustomerStore();
 
 const searchTerm = ref("");
@@ -81,6 +84,7 @@ const handleDelete = (rowData: Identifiable) => {
   const customerId = rowData.id;
   if (customerId) {
     customerStore.deleteCustomer(customerId);
+    toast.success("Customer deleted successfully");
   }
 };
 </script>

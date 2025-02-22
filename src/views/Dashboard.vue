@@ -52,25 +52,27 @@
 </template>
 
 <script setup lang="ts">
+import Card from "../components/global/Card.vue";
+import NoDataSvg from "../components/svg/NoDataSvg.vue";
+import RadialBar from "../components/global/RadialBar.vue";
+import AreaChart from "../components/global/AreaChart.vue";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getCardData } from "../components/lib/data/getCardData";
-import Card from "../components/global/Card.vue";
 import { type Identifiable } from "../components/global/Table.vue";
 import { useCustomerStore } from "../store/customers";
 import { Table, Input } from "../components/global";
 import { SearchIcon, ChevronIcon } from "../components/icons";
 import { customerHeaders } from "../components/lib/data/getTableData";
-import NoDataSvg from "../components/svg/NoDataSvg.vue";
-import RadialBar from "../components/global/RadialBar.vue";
-import AreaChart from "../components/global/AreaChart.vue";
+import { useToast } from "vue-toastification";
 
 const searchTerm = ref("");
 
 const cardData = computed(() => getCardData())
 
-const customerStore = useCustomerStore();
 const router = useRouter();
+const toast = useToast();
+const customerStore = useCustomerStore();
 
 const formattedCustomers = computed(() =>
   customerStore.filteredCustomers
@@ -99,6 +101,7 @@ const handleDelete = (rowData: Identifiable) => {
   const customerId = rowData.id;
   if (customerId) {
     customerStore.deleteCustomer(customerId);
+    toast.success("Customer deleted successfully");
   }
 };
 </script>

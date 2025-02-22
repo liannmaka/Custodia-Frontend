@@ -106,6 +106,8 @@
 </template>
 
 <script setup lang="ts">
+import router from "../router";
+import Quill from "quill";
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import { Input } from "../components/global";
@@ -114,8 +116,7 @@ import { useCustomerStore } from "../store/customers";
 import type { CustomerDetails, FormField } from "../types/global";
 import { useValidation } from "../components/lib/utils/validation";
 import { nigerianStates } from "../components/lib/data/getNigerianStates";
-import router from "../router";
-import Quill from "quill";
+import { useToast } from "vue-toastification";
 
 export type Customer = typeof customer;
 
@@ -129,10 +130,11 @@ const customer = reactive<CustomerDetails>({
   state: "",
   status: true,
   details: "",
-  created_at: ""
+  created_at: "",
 });
 
 const route = useRoute();
+const toast = useToast();
 const customerStore = useCustomerStore();
 
 const emit = defineEmits(["customer-saved", "close-customer"]);
@@ -253,12 +255,12 @@ const saveCustomer = () => {
   if (validateOnSubmit()) {
     if (customerId.value) {
       customerStore.updateCustomer(customerId.value, customer);
+      toast.success("Customer updated successfully");
     } else {
       customer.created_at = new Date().toISOString();
       customerStore.addCustomer(customer);
+      toast.success("Customer created successfully");
     }
-
-  console.log('add',customer )
     router.push("/customers");
   }
 };
