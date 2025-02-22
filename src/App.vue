@@ -19,18 +19,6 @@
           >
             <RouterView />
           </div>
-          <footer
-            class="py-1 px-5 lg:px-7 h-8 text-[0.625rem] flex items-center justify-end space-x-0.5"
-          >
-            <span>Inspiration From:</span>
-            <a
-              class="text-primary"
-              href="https://www.behance.net/gallery/211291667/user-management-%28-UI-design-%29#"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Behance</a
-            >
-          </footer>
         </div>
       </div>
     </div>

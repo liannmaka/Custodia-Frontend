@@ -2,8 +2,8 @@
   <header class="bg-white w-full h-20 px-6 fixed top-0 z-50 shadow-sm flex">
     <RouterLink to="/" class="w-full h-full flex items-center">
       <ChipIcon />
-      <span class="text-primary text-lg md:text-xl flex items-center">
-        Syca<span class="font-bold">more</span>
+      <span class="text-primary text-lg md:text-xl flex items-center font-bold">
+        Custodia
       </span>
     </RouterLink>
     <!-- <div class="date-time">Date/Time</div>s -->
