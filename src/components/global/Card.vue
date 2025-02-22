@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { type CardData } from "./../../types/global";
+import { type CardData } from "@/types/global";
 
 defineProps<{
   cardData: CardData;

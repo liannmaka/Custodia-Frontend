@@ -1,6 +1,6 @@
-import { UserGroup, Heart, Minus, UserPlus } from "../../icons";
-import { useCustomerStore } from "../../../store/customers";
-import { type CardData } from "../../../types/global";
+import { UserGroup, Heart, Minus, UserPlus } from "@/components/icons";
+import { useCustomerStore } from "@/store/customers";
+import { type CardData } from "@/types/global";
 
 
 export const getCardData = (): CardData[] => {

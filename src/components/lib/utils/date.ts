@@ -1,6 +1,6 @@
 import { h } from "vue";
-import { UpArrow, DownArrow } from "../../icons/";
-import { type CustomerDetails } from "./../../../types/global";
+import { UpArrow, DownArrow } from "@/components/icons/";
+import { type CustomerDetails } from "@/types/global";
 
 interface PercentageChange {
   percentage: string;

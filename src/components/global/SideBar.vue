@@ -34,8 +34,8 @@
 </template>
 
 <script setup lang="ts">
-import { BackArrow, UserIcon, HomeIcon} from "../icons";
-import { type DashboardMenu } from "../../types/global";
+import { BackArrow, UserIcon, HomeIcon} from "@/components/icons";
+import { type DashboardMenu } from "@/types/global";
 import { useRoute } from "vue-router";
 
 defineProps<{

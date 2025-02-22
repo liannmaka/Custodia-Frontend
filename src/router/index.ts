@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { CustomerTable, AddCustomer, Dashboard, NotFound } from "../views";
+import { CustomerTable, AddCustomer, Dashboard, NotFound } from "@/views";
 
 const routes = [
   // {

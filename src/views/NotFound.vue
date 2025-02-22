@@ -16,5 +16,5 @@
 </template>
 
 <script setup lang="ts">
-import { ExclamationTriangle } from "../components/icons";
+import { ExclamationTriangle } from "@/components/icons";
 </script>

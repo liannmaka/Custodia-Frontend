@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { EditIcon, DeleteIcon } from "../icons";
+import { EditIcon, DeleteIcon } from "@/components/icons";
 
 interface Column {
   label: string;

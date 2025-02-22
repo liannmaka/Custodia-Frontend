@@ -1,5 +1,5 @@
 import { type Component } from "vue";
-import type { Customer } from "../views/AddCustomer.vue";
+import type { Customer } from "@/views/AddCustomer.vue";
 
 export interface CustomerDetails {
   id?: string;

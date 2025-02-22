@@ -52,18 +52,18 @@
 </template>
 
 <script setup lang="ts">
-import Card from "../components/global/Card.vue";
-import NoDataSvg from "../components/svg/NoDataSvg.vue";
-import RadialBar from "../components/global/RadialBar.vue";
-import AreaChart from "../components/global/AreaChart.vue";
+import Card from "@/components/global/Card.vue";
+import NoDataSvg from "@/components/svg/NoDataSvg.vue";
+import RadialBar from "@/components/global/RadialBar.vue";
+import AreaChart from "@/components/global/AreaChart.vue";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { getCardData } from "../components/lib/data/getCardData";
-import { type Identifiable } from "../components/global/Table.vue";
-import { useCustomerStore } from "../store/customers";
-import { Table, Input } from "../components/global";
-import { SearchIcon, ChevronIcon } from "../components/icons";
-import { customerHeaders } from "../components/lib/data/getTableData";
+import { getCardData } from "@/components/lib/data/getCardData";
+import { type Identifiable } from "@/components/global/Table.vue";
+import { useCustomerStore } from "@/store/customers";
+import { Table, Input } from "@/components/global";
+import { SearchIcon, ChevronIcon } from "@/components/icons";
+import { customerHeaders } from "@/components/lib/data/getTableData";
 import { useToast } from "vue-toastification";
 
 const searchTerm = ref("");

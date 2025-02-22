@@ -1,5 +1,5 @@
 import { computed } from "vue";
-import { useCustomerStore } from "../../../store/customers";
+import { useCustomerStore } from "@/store/customers";
 
 interface CustomerHeaders {
   key: string;

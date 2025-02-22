@@ -11,5 +11,5 @@
 </template>
 
 <script setup lang="ts">
-import { ChipIcon } from "../icons";
+import { ChipIcon } from "@/components/icons";
 </script>

@@ -39,8 +39,8 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { Header, SideBar } from "./components/global";
-import { Menu } from "./components/icons";
+import { Header, SideBar } from "@/components/global";
+import { Menu } from "@/components/icons";
 
 const active = ref<boolean>(false);
 

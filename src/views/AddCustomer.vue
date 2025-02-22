@@ -106,16 +106,16 @@
 </template>
 
 <script setup lang="ts">
-import router from "../router";
+import router from "@/router";
 import Quill from "quill";
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
-import { Input } from "../components/global";
-import { EmailIcon, PhoneIcon, PersonIcon } from "../components/icons";
-import { useCustomerStore } from "../store/customers";
-import type { CustomerDetails, FormField } from "../types/global";
-import { useValidation } from "../components/lib/utils/validation";
-import { nigerianStates } from "../components/lib/data/getNigerianStates";
+import { Input } from "@/components/global";
+import { EmailIcon, PhoneIcon, PersonIcon } from "@/components/icons";
+import { useCustomerStore } from "@/store/customers";
+import type { CustomerDetails, FormField } from "@/types/global";
+import { useValidation } from "@/components/lib/utils/validation";
+import { nigerianStates } from "@/components/lib/data/getNigerianStates";
 import { useToast } from "vue-toastification";
 
 export type Customer = typeof customer;

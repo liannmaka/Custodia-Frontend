@@ -42,14 +42,14 @@
 </template>
 
 <script setup lang="ts">
-import NoDataSvg from "../components/svg/NoDataSvg.vue";
+import NoDataSvg from "@/components/svg/NoDataSvg.vue";
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
-import { Table, Input } from "../components/global";
-import { SearchIcon, AddIcon } from "../components/icons";
-import { useCustomerStore } from "../store/customers";
-import { type Identifiable } from "../components/global/Table.vue";
-import { customerHeaders } from "../components/lib/data/getTableData";
+import { Table, Input } from "@/components/global";
+import { SearchIcon, AddIcon } from "@/components/icons";
+import { useCustomerStore } from "@/store/customers";
+import { type Identifiable } from "@/components/global/Table.vue";
+import { customerHeaders } from "@/components/lib/data/getTableData";
 import { useToast } from "vue-toastification";
 
 

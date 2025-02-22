@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import type { CustomerDetails } from "../types/global";
+import type { CustomerDetails } from "@/types/global";
 import {
   pastDate,
   percentageChange,
   dailyCount,
-} from "../components/lib/utils/date";
+} from "@/components/lib/utils/date";
 
 export const useCustomerStore = defineStore(
   "customer",
