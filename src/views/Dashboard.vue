@@ -29,7 +29,7 @@
             @input="(event: any) => handleSearchTerm('searchTerm', event.target.value)"
           />
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto scroller">
           <Table
             :columns="customerHeaders"
             :data="formattedCustomers"

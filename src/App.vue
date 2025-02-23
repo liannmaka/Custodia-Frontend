@@ -15,7 +15,7 @@
             <Menu class="w-5 h-5" />
           </button>
           <div
-            class="space-pad mt-8 lg:mt-0 w-full h-[calc(100%-2rem)] overflow-auto"
+            class="space-pad mt-8 lg:mt-0 w-full h-[calc(100%-2rem)] overflow-auto scroller"
           >
             <RouterView />
           </div>
