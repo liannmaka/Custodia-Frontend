@@ -43,13 +43,13 @@
 
 <script setup lang="ts">
 import NoDataSvg from "@/components/svg/NoDataSvg.vue";
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { Table, Input } from "@/components/global";
 import { SearchIcon, AddIcon } from "@/components/icons";
 import { useCustomerStore } from "@/store/customers";
 import { type Identifiable } from "@/components/global/Table.vue";
-import { customerHeaders } from "@/components/lib/data/getTableData";
+import { customerHeaders, formattedCustomers } from "@/components/lib/data/getTableData";
 import { useToast } from "vue-toastification";
 
 
@@ -58,13 +58,6 @@ const toast = useToast();
 const customerStore = useCustomerStore();
 
 const searchTerm = ref("");
-
-const formattedCustomers = computed(() =>
-  customerStore.filteredCustomers.map((customer) => ({
-    ...customer,
-    status: customer.status ? "Active" : "Inactive",
-  }))
-);
 
 const handleSearchTerm = (key: string, value: string) => {
   if (key === "searchTerm") {

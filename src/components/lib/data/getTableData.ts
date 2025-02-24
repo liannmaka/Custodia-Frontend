@@ -37,17 +37,11 @@ export const customerHeaders: CustomerHeaders[] = [
   },
 ];
 
-export const getFormattedCustomers = () => {
-    const customerStore = useCustomerStore();
-  
-    const formattedCustomers = computed(() =>
-      customerStore.filteredCustomers.map((customer) => ({
-        ...customer,
-        status: customer.status ? "Active" : "Inactive",
-      }))
-    );
-  
-    return {
-      formattedCustomers,
-    };
-  }
+export const formattedCustomers = computed(() => {
+  const customerStore = useCustomerStore();
+
+  return customerStore.filteredCustomers.map((customer) => ({
+    ...customer,
+    status: customer.status ? "Active" : "Inactive",
+  }));
+});

@@ -24,7 +24,7 @@
         </li>
       </ul>
       <button
-        class="lg:hidden absolute bottom-0 right-4 py-0.5 px-1 text-primary bg-primary/10 rounded-sm"
+        class="lg:hidden absolute bottom-0 right-4 py-0.5 px-1 text-primary bg-primary/10 rounded-sm backdrop-blur-sm"
         @click="handleCloseSidebar"
       >
         <BackArrow class="w-5 h-5" />
@@ -42,8 +42,10 @@ defineProps<{
   active: boolean;
 }>();
 
-const emit = defineEmits(["close-sidebar"]);
 const route = useRoute();
+
+const emit = defineEmits(["close-sidebar"]);
+
 
 const handleCloseSidebar = () => {
   emit("close-sidebar");

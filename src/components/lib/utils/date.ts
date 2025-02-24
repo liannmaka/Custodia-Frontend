@@ -16,6 +16,32 @@ export const pastDate = (date: number): Date => {
   return today;
 };
 
+// below code is under testing
+  export const filterCustomers = (customers: Array<CustomerDetails>, filterFn: CustomerFn) => {
+    const oneWeekAgo = pastDate(7);
+    const twoWeeksAgo = pastDate(14);
+
+    // customers created one week ago
+    const currentCustomer = customers.filter(
+      (customer) =>
+        customer.created_at &&
+        filterFn(customer) &&
+        new Date(customer.created_at) >= oneWeekAgo
+    ).length
+
+    // customers created two weeks ago
+    const previousCustomer = customers.filter(
+      (customer) =>
+        customer.created_at &&
+        filterFn(customer) &&
+        new Date(customer.created_at) >= twoWeeksAgo &&
+        new Date(customer.created_at) < oneWeekAgo
+    ).length
+
+    return {currentCustomer, previousCustomer}
+  }
+
+
 export const percentageChange = (
   currentDate: number,
   previousDate: number
@@ -25,7 +51,9 @@ export const percentageChange = (
       percentage: currentDate > 0 ? "100%" : "0%",
       icon: currentDate > 0 ? h(UpArrow) : null,
       color:
-        currentDate > 0 ? "text-green-500" : "text-gray-500 justify-center ml-2",
+        currentDate > 0
+          ? "text-green-500"
+          : "text-gray-500 justify-center ml-2",
     };
   }
 

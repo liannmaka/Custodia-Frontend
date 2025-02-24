@@ -2,10 +2,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import { CustomerTable, AddCustomer, Dashboard, NotFound } from "@/views";
 
 const routes = [
-  // {
-  //   path: "/",
-  //   redirect: "/customers",
-  // },
   {
     path: "/",
     name:"Dashboard",

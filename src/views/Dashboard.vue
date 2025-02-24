@@ -15,7 +15,7 @@
     <section class="px-8 py-4 bg-white rounded-lg shadow-md">
       <div class="text-[#263238] font-bold mb-5 md:flex md:justify-between border-b-[1px] pb-2">
         <h2 class="text-2xl font-bold mb-[6px] md:mb-0">Customers</h2>
-        <RouterLink to="/customers" class="text-sm self-center flex">
+        <RouterLink to="/customers" class="text-sm self-center flex hover:-translate-x-0.5 transition-all ease-in-out duration-100">
           See more<ChevronIcon class="w-4 h-4 self-center ml-[0.8px]" />
         </RouterLink>
       </div>
@@ -32,7 +32,7 @@
         <div class="overflow-x-auto scroller">
           <Table
             :columns="customerHeaders"
-            :data="formattedCustomers"
+            :data="formattedCustomers.slice(0,3)"
             @edit="handleEdit"
             @delete="handleDelete"
           >
@@ -63,7 +63,7 @@ import { type Identifiable } from "@/components/global/Table.vue";
 import { useCustomerStore } from "@/store/customers";
 import { Table, Input } from "@/components/global";
 import { SearchIcon, ChevronIcon } from "@/components/icons";
-import { customerHeaders } from "@/components/lib/data/getTableData";
+import { customerHeaders, formattedCustomers } from "@/components/lib/data/getTableData";
 import { useToast } from "vue-toastification";
 
 const searchTerm = ref("");
@@ -73,15 +73,6 @@ const cardData = computed(() => getCardData())
 const router = useRouter();
 const toast = useToast();
 const customerStore = useCustomerStore();
-
-const formattedCustomers = computed(() =>
-  customerStore.filteredCustomers
-    .map((customer) => ({
-      ...customer,
-      status: customer.status ? "Active" : "Inactive",
-    }))
-    .slice(0, 3)
-);
 
 const handleSearchTerm = (key: string, value: string) => {
   if (key === "searchTerm") {
@@ -105,12 +96,3 @@ const handleDelete = (rowData: Identifiable) => {
   }
 };
 </script>
-
-<style scoped>
-.table-wrapper {
-  overflow: hidden;
-}
-.chart {
-  border: 2px dashed white;
-}
-</style>
