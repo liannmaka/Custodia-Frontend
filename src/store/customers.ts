@@ -3,9 +3,9 @@ import { ref, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type { CustomerDetails } from "@/types/global";
 import {
+  pastDate,
   percentageChange,
   dailyCount,
-  filterCustomers,
 } from "@/components/lib/utils/date";
 
 export const useCustomerStore = defineStore(
@@ -26,63 +26,93 @@ export const useCustomerStore = defineStore(
         customers.value.filter((customer) => customer.status === false).length
     );
 
-    const activeCustomersStats = computed(() => {
-      // Remove this commented code below, when you can fully test
-      const result = filterCustomers(
-        customers.value,
-        (customer) => customer.status === true
-      );
+    const newActiveCustomers = computed(() => {
+      const oneWeekAgo = pastDate(7);
 
-      return result;
+      return customers.value.filter(
+        (customer) =>
+          customer.status === true &&
+          customer.created_at &&
+          new Date(customer.created_at) >= oneWeekAgo
+      ).length;
+    });
+
+    const previousActiveCustomers = computed(() => {
+      const oneWeekAgo = pastDate(7);
+      const twoWeeksAgo = pastDate(14);
+
+      return customers.value.filter(
+        (customer) =>
+          customer.status === true &&
+          customer.created_at &&
+          new Date(customer.created_at) >= twoWeeksAgo &&
+          new Date(customer.created_at) < oneWeekAgo
+      ).length;
     });
 
     const activePercentageChange = computed(() => {
       return percentageChange(
-        activeCustomersStats.value.currentCustomer,
-        activeCustomersStats.value.previousCustomer
+        newActiveCustomers.value,
+        previousActiveCustomers.value
       );
     });
 
-    const inactiveCustomersStats = computed(() => {
-      // Remove this commented code below, when you can fully test
-      const result = filterCustomers(
-        customers.value,
-        (customer) => customer.status === false
-      );
+    const newInactiveCustomers = computed(() => {
+      const oneWeekAgo = pastDate(7);
 
-      return result;
+      return customers.value.filter(
+        (customer) =>
+          customer.status === false &&
+          customer.created_at &&
+          new Date(customer.created_at) >= oneWeekAgo
+      ).length;
+    });
+
+    const previousInactiveCustomers = computed(() => {
+      const oneWeekAgo = pastDate(7);
+      const twoWeeksAgo = pastDate(14);
+
+      return customers.value.filter(
+        (customer) =>
+          customer.status === false &&
+          customer.created_at &&
+          new Date(customer.created_at) >= twoWeeksAgo &&
+          new Date(customer.created_at) < oneWeekAgo
+      ).length;
     });
 
     const inactivePercentageChange = computed(() => {
       return percentageChange(
-        inactiveCustomersStats.value.currentCustomer,
-        inactiveCustomersStats.value.previousCustomer
+        newInactiveCustomers.value,
+        previousInactiveCustomers.value
       );
     });
 
-    const newCustomersStats = computed(() => {
-      // test this code over time
-      // const oneWeekAgo = pastDate(7);
+    // in the last 7 days
+    const newCustomers = computed(() => {
+      const oneWeekAgo = pastDate(7);
 
-      // return customers.value.filter((customer) => {
-      //   if (!customer.created_at) return false;
-      //   const createdDate = new Date(customer.created_at);
-      //   return createdDate >= oneWeekAgo;
-      // }).length;
+      return customers.value.filter((customer) => {
+        if (!customer.created_at) return false;
+        const createdDate = new Date(customer.created_at);
+        return createdDate >= oneWeekAgo;
+      }).length;
+    });
 
-      const result = filterCustomers(
-        customers.value,
-        (customer) => customer.status === true || customer.status === false
-      );
+    const previousNewCustomers = computed(() => {
+      const oneWeekAgo = pastDate(7);
+      const twoWeeksAgo = pastDate(14);
 
-      return result;
+      return customers.value.filter(
+        (customer) =>
+          customer.created_at &&
+          new Date(customer.created_at) >= twoWeeksAgo &&
+          new Date(customer.created_at) < oneWeekAgo
+      ).length;
     });
 
     const newPercentageChange = computed(() => {
-      return percentageChange(
-        newCustomersStats.value.currentCustomer,
-        newCustomersStats.value.previousCustomer
-      );
+      return percentageChange(newCustomers.value, previousNewCustomers.value);
     });
 
     const activePercentage = computed(() =>
@@ -103,7 +133,6 @@ export const useCustomerStore = defineStore(
         customers.value,
         (customer) => customer.status === true
       );
-
       return dailyActiveCount;
     });
 
@@ -112,7 +141,6 @@ export const useCustomerStore = defineStore(
         customers.value,
         (customer) => customer.status === false
       );
-      
       return dailyInactiveCount;
     });
 
@@ -175,7 +203,7 @@ export const useCustomerStore = defineStore(
       totalCustomers,
       activeCustomers,
       inactiveCustomers,
-      newCustomersStats,
+      newCustomers,
       activePercentage,
       inactivePercentage,
       activePercentageChange,

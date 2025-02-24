@@ -36,7 +36,7 @@ export const getCardData = (): CardData[] => {
     {
       textColor: "text-black",
       cardHeading: "New Customers",
-      value: customerStore.newCustomersStats.currentCustomer.toString(),
+      value: customerStore.newCustomers.toString(),
       metricsPercent: customerStore.newPercentageChange.percentage,
       metricsColor: customerStore.newPercentageChange.color,
       metricsIcon: customerStore.newPercentageChange.icon,
