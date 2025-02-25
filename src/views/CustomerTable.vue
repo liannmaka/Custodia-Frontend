@@ -13,7 +13,7 @@
       </RouterLink>
     </div>
     <div class="bg-white pt-8 px-4 md:px-6 lg:px-8">
-      <div class="w-56 mb-2 sm:w-80">
+      <div class="max-w-56 mb-2 sm:max-w-80">
         <Input
           placeholder="Search"
           :icon="SearchIcon"
@@ -77,7 +77,9 @@ const handleDelete = (rowData: Identifiable) => {
   const customerId = rowData.id;
   if (customerId) {
     customerStore.deleteCustomer(customerId);
-    toast.success("Customer deleted successfully");
+    toast.success("Customer deleted successfully", {
+      timeout: 2000
+    });
   }
 };
 </script>

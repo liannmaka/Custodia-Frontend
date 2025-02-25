@@ -14,7 +14,7 @@
     </section>
     <section class="px-8 py-4 bg-white rounded-lg shadow-md">
       <div class="text-[#263238] font-bold mb-5 md:flex md:justify-between border-b-[1px] pb-2">
-        <h2 class="text-2xl font-bold mb-[6px] md:mb-0">Customers</h2>
+        <h2 class="text-2xl font-bold mb-[7px] md:mb-0">Customers</h2>
         <RouterLink to="/customers" class="text-sm self-center flex hover:-translate-x-0.5 transition-all ease-in-out duration-100">
           See more<ChevronIcon class="w-4 h-4 self-center ml-[0.8px]" />
         </RouterLink>
@@ -92,7 +92,9 @@ const handleDelete = (rowData: Identifiable) => {
   const customerId = rowData.id;
   if (customerId) {
     customerStore.deleteCustomer(customerId);
-    toast.success("Customer deleted successfully");
+    toast.success("Customer deleted successfully", {
+      timeout: 2000
+    });
   }
 };
 </script>

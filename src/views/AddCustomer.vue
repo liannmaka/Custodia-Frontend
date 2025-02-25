@@ -256,11 +256,15 @@ const saveCustomer = () => {
   if (validateOnSubmit()) {
     if (customerId.value) {
       customerStore.updateCustomer(customerId.value, customer);
-      toast.success("Customer updated successfully");
+      toast.success("Customer updated successfully", {
+        timeout: 2000,
+      });
     } else {
       customer.created_at = new Date().toISOString();
       customerStore.addCustomer(customer);
-      toast.success("Customer created successfully");
+      toast.success("Customer created successfully", {
+        timeout: 2000,
+      });
     }
     router.push("/customers");
   }
