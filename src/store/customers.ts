@@ -3,9 +3,10 @@ import { ref, computed } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import type { CustomerDetails } from "@/types/global";
 import {
-  pastDate,
+  // pastDate,
   percentageChange,
   dailyCount,
+  filterCustomers
 } from "@/components/lib/utils/date";
 
 export const useCustomerStore = defineStore(
@@ -27,92 +28,104 @@ export const useCustomerStore = defineStore(
     );
 
     const newActiveCustomers = computed(() => {
-      const oneWeekAgo = pastDate(7);
+      // const oneWeekAgo = pastDate(7);
 
-      return customers.value.filter(
-        (customer) =>
-          customer.status === true &&
-          customer.created_at &&
-          new Date(customer.created_at) >= oneWeekAgo
-      ).length;
+      // return customers.value.filter(
+      //   (customer) =>
+      //     customer.status === true &&
+      //     customer.created_at &&
+      //     new Date(customer.created_at) >= oneWeekAgo
+      // ).length;
+
+      const result = filterCustomers(customers.value, (customer) => customer.status === true)
+
+      return result
     });
 
-    const previousActiveCustomers = computed(() => {
-      const oneWeekAgo = pastDate(7);
-      const twoWeeksAgo = pastDate(14);
+    // const previousActiveCustomers = computed(() => {
+    //   const oneWeekAgo = pastDate(7);
+    //   const twoWeeksAgo = pastDate(14);
 
-      return customers.value.filter(
-        (customer) =>
-          customer.status === true &&
-          customer.created_at &&
-          new Date(customer.created_at) >= twoWeeksAgo &&
-          new Date(customer.created_at) < oneWeekAgo
-      ).length;
-    });
+    //   return customers.value.filter(
+    //     (customer) =>
+    //       customer.status === true &&
+    //       customer.created_at &&
+    //       new Date(customer.created_at) >= twoWeeksAgo &&
+    //       new Date(customer.created_at) < oneWeekAgo
+    //   ).length;
+    // });
 
     const activePercentageChange = computed(() => {
       return percentageChange(
-        newActiveCustomers.value,
-        previousActiveCustomers.value
+        newActiveCustomers.value.currentCustomer,
+        newActiveCustomers.value.previousCustomer
       );
     });
 
     const newInactiveCustomers = computed(() => {
-      const oneWeekAgo = pastDate(7);
+      // const oneWeekAgo = pastDate(7);
 
-      return customers.value.filter(
-        (customer) =>
-          customer.status === false &&
-          customer.created_at &&
-          new Date(customer.created_at) >= oneWeekAgo
-      ).length;
+      // return customers.value.filter(
+      //   (customer) =>
+      //     customer.status === false &&
+      //     customer.created_at &&
+      //     new Date(customer.created_at) >= oneWeekAgo
+      // ).length;
+
+      const result = filterCustomers(customers.value, (customer) => customer.status === false)
+
+      return result
     });
 
-    const previousInactiveCustomers = computed(() => {
-      const oneWeekAgo = pastDate(7);
-      const twoWeeksAgo = pastDate(14);
+    // const previousInactiveCustomers = computed(() => {
+    //   const oneWeekAgo = pastDate(7);
+    //   const twoWeeksAgo = pastDate(14);
 
-      return customers.value.filter(
-        (customer) =>
-          customer.status === false &&
-          customer.created_at &&
-          new Date(customer.created_at) >= twoWeeksAgo &&
-          new Date(customer.created_at) < oneWeekAgo
-      ).length;
-    });
+    //   return customers.value.filter(
+    //     (customer) =>
+    //       customer.status === false &&
+    //       customer.created_at &&
+    //       new Date(customer.created_at) >= twoWeeksAgo &&
+    //       new Date(customer.created_at) < oneWeekAgo
+    //   ).length;
+    // });
 
     const inactivePercentageChange = computed(() => {
       return percentageChange(
-        newInactiveCustomers.value,
-        previousInactiveCustomers.value
+        newInactiveCustomers.value.currentCustomer,
+        newInactiveCustomers.value.previousCustomer
       );
     });
 
     // in the last 7 days
     const newCustomers = computed(() => {
-      const oneWeekAgo = pastDate(7);
+      // const oneWeekAgo = pastDate(7);
 
-      return customers.value.filter((customer) => {
-        if (!customer.created_at) return false;
-        const createdDate = new Date(customer.created_at);
-        return createdDate >= oneWeekAgo;
-      }).length;
+      // return customers.value.filter((customer) => {
+      //   if (!customer.created_at) return false;
+      //   const createdDate = new Date(customer.created_at);
+      //   return createdDate >= oneWeekAgo;
+      // }).length;
+
+      const result = filterCustomers(customers.value, (customer) => customer.status === true || customer.status === false)
+
+      return result
     });
 
-    const previousNewCustomers = computed(() => {
-      const oneWeekAgo = pastDate(7);
-      const twoWeeksAgo = pastDate(14);
+    // const previousNewCustomers = computed(() => {
+    //   const oneWeekAgo = pastDate(7);
+    //   const twoWeeksAgo = pastDate(14);
 
-      return customers.value.filter(
-        (customer) =>
-          customer.created_at &&
-          new Date(customer.created_at) >= twoWeeksAgo &&
-          new Date(customer.created_at) < oneWeekAgo
-      ).length;
-    });
+    //   return customers.value.filter(
+    //     (customer) =>
+    //       customer.created_at &&
+    //       new Date(customer.created_at) >= twoWeeksAgo &&
+    //       new Date(customer.created_at) < oneWeekAgo
+    //   ).length;
+    // });
 
     const newPercentageChange = computed(() => {
-      return percentageChange(newCustomers.value, previousNewCustomers.value);
+      return percentageChange(newCustomers.value.currentCustomer, newCustomers.value.previousCustomer);
     });
 
     const activePercentage = computed(() =>
