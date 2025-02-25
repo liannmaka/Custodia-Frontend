@@ -174,6 +174,7 @@ onMounted(() => {
     customer.phone_number = customerDetails.phone_number;
     customer.state = customerDetails.state;
     customer.status = customerDetails.status;
+    customer.created_at = customerDetails.created_at;
   }
 });
 
