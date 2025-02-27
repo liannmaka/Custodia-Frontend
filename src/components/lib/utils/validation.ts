@@ -14,12 +14,35 @@ export const useValidation = (
   });
 
   const validateField = (field: FormField, value: any): string | null => {
+    // Required field check
     if (field.required && !value) {
       return `${field.label} is required.`;
     }
+
+    // Minimum length check
     if (field.minLength && value.length < field.minLength) {
       return `${field.label} must be at least ${field.minLength} characters.`;
     }
+
+    // Specific check for phone number field
+    if (field.model === "phone_number" && value) {
+      // Allow only digits (no letters or special characters)
+      if (!/^\d+$/.test(value)) {
+        return `${field.label} must contain only numbers.`;
+      }
+    }
+
+    // Specific check for first name and last name fields
+    if (
+      (field.model === "first_name" || field.model === "last_name") &&
+      value
+    ) {
+      // Disallow any digit in the name
+      if (/\d/.test(value)) {
+        return `${field.label} should not contain numbers.`;
+      }
+    }
+
     if (
       field.pattern &&
       typeof value === "string" &&
@@ -27,6 +50,7 @@ export const useValidation = (
     ) {
       return `${field.label} is not valid.`;
     }
+
     return null;
   };
 
