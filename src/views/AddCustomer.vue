@@ -36,7 +36,7 @@
             </div>
             <div v-if="field.model === 'state'">
               <label for="state" class="block text-sm font-medium text-gray-700"
-                >State</label
+                >State *</label
               >
               <select
                 v-model="customer.state"
