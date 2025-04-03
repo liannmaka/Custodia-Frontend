@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { type FormField } from "@/types/global";
 
 export const useValidation = (
@@ -62,7 +62,7 @@ export const useValidation = (
     }
   };
 
-  const validateOnSubmit = (): boolean => {
+  const validateOnSubmit = async (): Promise<boolean> => {
     let isValid = true;
     formFields.forEach((field) => {
       const error = validateField(field, formData[field.model]);
@@ -70,6 +70,8 @@ export const useValidation = (
       touched.value[field.model] = true;
       if (error) isValid = false;
     });
+
+    await nextTick()
     return isValid;
   };
 

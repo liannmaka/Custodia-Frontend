@@ -1,6 +1,5 @@
 import { h } from "vue";
 import { UpArrow, DownArrow } from "@/components/icons/";
-import { type CustomerDetails } from "@/types/global";
 
 interface PercentageChange {
   percentage: string;
@@ -8,39 +7,11 @@ interface PercentageChange {
   color: string;
 }
 
-type CustomerFn = (customer: CustomerDetails) => void;
-
-export const pastDate = (date: number): Date => {
-  const today = new Date();
-  today.setDate(today.getDate() - date);
-  return today;
+export const getPastDate = (daysAgo: number): Date => {
+  const date = new Date();
+  date.setDate(date.getDate() - daysAgo);
+  return date;
 };
-
-// below code is under testing
-  export const filterCustomers = (customers: Array<CustomerDetails>, filterFn: CustomerFn) => {
-    const oneWeekAgo = pastDate(7);
-    const twoWeeksAgo = pastDate(14);
-
-    // customers created one week ago
-    const currentCustomer = customers.filter(
-      (customer) =>
-        customer.created_at &&
-        filterFn(customer) &&
-        new Date(customer.created_at) >= oneWeekAgo
-    ).length
-
-    // customers created two weeks ago
-    const previousCustomer = customers.filter(
-      (customer) =>
-        customer.created_at &&
-        filterFn(customer) &&
-        new Date(customer.created_at) >= twoWeeksAgo &&
-        new Date(customer.created_at) < oneWeekAgo
-    ).length
-
-    return {currentCustomer, previousCustomer}
-  }
-
 
 export const percentageChange = (
   currentDate: number,
@@ -68,43 +39,4 @@ export const percentageChange = (
         ? "text-red-500"
         : "text-gray-500",
   };
-};
-
-const getMonday = () => {
-  const monday = new Date();
-  const dayOfWeek = monday.getDay();
-
-  if (dayOfWeek === 0) {
-    monday.setDate(monday.getDate() - 6);
-  } else {
-    monday.setDate(monday.getDate() - dayOfWeek + 1);
-  }
-
-  monday.setHours(0, 0, 0, 0);
-
-  return monday;
-};
-
-export const dailyCount = (
-  customers: Array<CustomerDetails>,
-  filterFn: CustomerFn
-) => {
-  if (customers.length === 0) return [];
-  const counts = Array(7).fill(0);
-
-  customers.forEach((customer) => {
-    if (!customer.created_at) return;
-    const created = new Date(customer.created_at);
-    created.setHours(0, 0, 0, 0);
-
-    const diffDays = Math.floor(
-      (created.getTime() - getMonday().getTime()) / (1000 * 60 * 60 * 24)
-    );
-
-    if (diffDays >= 0 && diffDays < 7 && filterFn(customer)) {
-      counts[diffDays]++;
-    }
-  });
-
-  return counts;
 };

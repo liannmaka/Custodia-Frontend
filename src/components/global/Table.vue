@@ -12,11 +12,9 @@
       </tr>
     </thead>
     <tbody class="w-full relative">
-      <tr v-if="loadingData">
-        <td class="w-full text-center p-8" :colspan="columns.length">
-          {{ loadingDataText }}
-        </td>
-      </tr>
+      <template v-if="loadingData">
+        <SkeletonRow :rowCount="rowCount" :columnCount="columns.length" />
+      </template>
       <template v-else-if="data && data.length > 0">
         <tr v-for="(row, idx) in data" :key="row.id || idx">
           <td
@@ -58,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import SkeletonRow from "./skeletons/SkeletonRow.vue";
 import { EditIcon, DeleteIcon } from "@/components/icons";
 
 interface Column {
@@ -82,6 +81,7 @@ const { renderCell } = defineProps<{
   loadingData?: boolean;
   loadingDataText?: string | null;
   emptyText?: string;
+  rowCount?: number;
 }>();
 
 const emit = defineEmits<{

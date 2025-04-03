@@ -89,16 +89,28 @@
         <div
           class="mt-12 lg:mt-16 mb-2 lg:mb-4 flex items-center space-x-4 lg:space-x-5"
         >
-          <button class="bg-secondary text-black/75" @click="cancel">
+          <Button
+            ariaLabel="Cancel button"
+            variant="cancel"
+            size="medium"
+            type="button"
+            rounded="medium"
+            @click="cancel"
+          >
             Cancel
-          </button>
-          <button
-            class="bg-primary text-white disabled:text-gray-100 disabled:cursor-not-allowed"
+          </Button>
+          <Button
+            ariaLabel="Create button"
+            variant="create"
+            size="medium"
             type="submit"
+            rounded="medium"
+            buttonStyle="disabled:text-gray-100"
             :disabled="Object.values(errors).some((error) => error !== null)"
+            :loading="saving"
           >
             {{ customerId ? "Save" : "Create" }}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
@@ -110,17 +122,17 @@ import router from "@/router";
 import Quill from "quill";
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
-import { Input } from "@/components/global";
+import { Input, Button } from "@/components/global";
 import { EmailIcon, PhoneIcon, PersonIcon } from "@/components/icons";
 import { useCustomerStore } from "@/store/customers";
 import type { CustomerDetails, FormField } from "@/types/global";
 import { useValidation } from "@/components/lib/utils/validation";
 import { nigerianStates } from "@/components/lib/data/getNigerianStates";
-import { useToast } from "vue-toastification";
 
 export type Customer = typeof customer;
 
 const customerId = ref<string>("");
+const saving = ref<boolean>(false);
 const editor = ref<HTMLDivElement | null>(null);
 const customer = reactive<CustomerDetails>({
   first_name: "",
@@ -130,14 +142,10 @@ const customer = reactive<CustomerDetails>({
   state: "",
   status: true,
   details: "",
-  created_at: "",
 });
 
 const route = useRoute();
-const toast = useToast();
 const customerStore = useCustomerStore();
-
-const emit = defineEmits(["customer-saved", "close-customer"]);
 
 onMounted(() => {
   const id = route.params.id as string;
@@ -252,21 +260,19 @@ const { errors, validateOnInput, validateOnSubmit } = useValidation(
   customer
 );
 
-const saveCustomer = () => {
-  if (validateOnSubmit()) {
-    if (customerId.value) {
-      customerStore.updateCustomer(customerId.value, customer);
-      toast.success("Customer updated successfully", {
-        timeout: 2000,
-      });
-    } else {
-      customer.created_at = new Date().toISOString();
-      customerStore.addCustomer(customer);
-      toast.success("Customer created successfully", {
-        timeout: 2000,
-      });
+const saveCustomer = async () => {
+  if (await validateOnSubmit()) {
+    try {
+      if (customerId.value) {
+        saving.value = true;
+        await customerStore.updateCustomer(customerId.value, customer);
+      } else {
+        saving.value = true;
+        await customerStore.addCustomer(customer);
+      }
+    } finally {
+      saving.value = false;
     }
-    router.push("/customers");
   }
 };
 
@@ -283,9 +289,3 @@ const handleInputChange = (field: keyof Customer, value: string | boolean) => {
   validateOnInput(field, value);
 };
 </script>
-
-<style scoped>
-button {
-  @apply p-3 w-full max-w-36 flex items-center justify-center rounded-md font-medium hover:opacity-90 hover:-translate-y-0.5 transition-all ease-in-out duration-100;
-}
-</style>

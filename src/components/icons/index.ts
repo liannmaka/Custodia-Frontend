@@ -18,3 +18,4 @@ export { default as UserPlus } from "./UserPlus.vue";
 export { default as DownArrow } from "./DownArrow.vue";
 export { default as UpArrow } from "./UpArrow.vue";
 export { default as ChevronIcon } from "./ChevronIcon.vue";
+export { default as ForwardArrow } from "./ForwardArrow.vue";

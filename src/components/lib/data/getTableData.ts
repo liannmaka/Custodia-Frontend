@@ -1,6 +1,3 @@
-import { computed } from "vue";
-import { useCustomerStore } from "@/store/customers";
-
 interface CustomerHeaders {
   key: string;
   label: string;
@@ -36,12 +33,3 @@ export const customerHeaders: CustomerHeaders[] = [
     label: "ACTIONS",
   },
 ];
-
-export const formattedCustomers = computed(() => {
-  const customerStore = useCustomerStore();
-
-  return customerStore.filteredCustomers.map((customer) => ({
-    ...customer,
-    status: customer.status ? "Active" : "Inactive",
-  }));
-});

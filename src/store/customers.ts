@@ -1,240 +1,442 @@
+import router from "@/router";
+import supabase from "@/config/supabaseClient";
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
-import { v4 as uuidv4 } from "uuid";
+import { ref, computed, watch } from "vue";
 import type { CustomerDetails } from "@/types/global";
-import {
-  // pastDate,
-  percentageChange,
-  dailyCount,
-  filterCustomers
-} from "@/components/lib/utils/date";
+import { percentageChange, getPastDate } from "@/components/lib/utils/date";
+import { useToast } from "vue-toastification";
+import usePagination from "@/composables/usePagination";
+import useDebounce from "@/composables/useDebounce";
 
-export const useCustomerStore = defineStore(
-  "customer",
-  () => {
-    const customers = ref<CustomerDetails[]>([]);
-    const searchTerm = ref("");
+export const useCustomerStore = defineStore("customer", () => {
+  const toast = useToast();
 
-    const totalCustomers = computed(() => customers.value.length);
+  const customers = ref<CustomerDetails[]>([]);
+  const searchTerm = ref<string>("");
+  const totalCustomers = ref<number>(0);
+  const activeCustomers = ref<number>(0);
+  const inactiveCustomers = ref<number>(0);
 
-    const activeCustomers = computed(
-      () =>
-        customers.value.filter((customer) => customer.status === true).length
+  const oneWeekAgo = getPastDate(7);
+  const twoWeeksAgo = getPastDate(14);
+
+  const activeLastWeekCustomers = ref<number>(0);
+  const activeTwoWeeksAgoCustomers = ref<number>(0);
+  const inactiveLastWeekCustomers = ref<number>(0);
+  const inactiveTwoWeeksAgoCustomers = ref<number>(0);
+  const totalCustomersLastWeek = ref<number>(0);
+  const totalCustomersTwoWeeksAgo = ref<number>(0);
+  const customerData = ref<
+    { date: string; active: number; inactive: number }[]
+  >([]);
+
+
+  // Only active customers
+  const dailyActiveCustomers = computed(() =>
+    customerData.value.map((item) => item.active)
+  );
+
+
+  // Only inactive customers
+  const dailyInactiveCustomers = computed(() =>
+    customerData.value.map((item) => item.inactive)
+  );
+
+  const activePercentageChange = computed(() => {
+    return percentageChange(
+      activeLastWeekCustomers.value,
+      activeTwoWeeksAgoCustomers.value
     );
+  });
 
-    const inactiveCustomers = computed(
-      () =>
-        customers.value.filter((customer) => customer.status === false).length
+  const inactivePercentageChange = computed(() => {
+    return percentageChange(
+      inactiveLastWeekCustomers.value,
+      inactiveTwoWeeksAgoCustomers.value
     );
+  });
 
-    const newActiveCustomers = computed(() => {
-      // const oneWeekAgo = pastDate(7);
-
-      // return customers.value.filter(
-      //   (customer) =>
-      //     customer.status === true &&
-      //     customer.created_at &&
-      //     new Date(customer.created_at) >= oneWeekAgo
-      // ).length;
-
-      const result = filterCustomers(customers.value, (customer) => customer.status === true)
-
-      return result
-    });
-
-    // const previousActiveCustomers = computed(() => {
-    //   const oneWeekAgo = pastDate(7);
-    //   const twoWeeksAgo = pastDate(14);
-
-    //   return customers.value.filter(
-    //     (customer) =>
-    //       customer.status === true &&
-    //       customer.created_at &&
-    //       new Date(customer.created_at) >= twoWeeksAgo &&
-    //       new Date(customer.created_at) < oneWeekAgo
-    //   ).length;
-    // });
-
-    const activePercentageChange = computed(() => {
-      return percentageChange(
-        newActiveCustomers.value.currentCustomer,
-        newActiveCustomers.value.previousCustomer
-      );
-    });
-
-    const newInactiveCustomers = computed(() => {
-      // const oneWeekAgo = pastDate(7);
-
-      // return customers.value.filter(
-      //   (customer) =>
-      //     customer.status === false &&
-      //     customer.created_at &&
-      //     new Date(customer.created_at) >= oneWeekAgo
-      // ).length;
-
-      const result = filterCustomers(customers.value, (customer) => customer.status === false)
-
-      return result
-    });
-
-    // const previousInactiveCustomers = computed(() => {
-    //   const oneWeekAgo = pastDate(7);
-    //   const twoWeeksAgo = pastDate(14);
-
-    //   return customers.value.filter(
-    //     (customer) =>
-    //       customer.status === false &&
-    //       customer.created_at &&
-    //       new Date(customer.created_at) >= twoWeeksAgo &&
-    //       new Date(customer.created_at) < oneWeekAgo
-    //   ).length;
-    // });
-
-    const inactivePercentageChange = computed(() => {
-      return percentageChange(
-        newInactiveCustomers.value.currentCustomer,
-        newInactiveCustomers.value.previousCustomer
-      );
-    });
-
-    // in the last 7 days
-    const newCustomers = computed(() => {
-      // const oneWeekAgo = pastDate(7);
-
-      // return customers.value.filter((customer) => {
-      //   if (!customer.created_at) return false;
-      //   const createdDate = new Date(customer.created_at);
-      //   return createdDate >= oneWeekAgo;
-      // }).length;
-
-      const result = filterCustomers(customers.value, (customer) => customer.status === true || customer.status === false)
-
-      return result
-    });
-
-    // const previousNewCustomers = computed(() => {
-    //   const oneWeekAgo = pastDate(7);
-    //   const twoWeeksAgo = pastDate(14);
-
-    //   return customers.value.filter(
-    //     (customer) =>
-    //       customer.created_at &&
-    //       new Date(customer.created_at) >= twoWeeksAgo &&
-    //       new Date(customer.created_at) < oneWeekAgo
-    //   ).length;
-    // });
-
-    const newPercentageChange = computed(() => {
-      return percentageChange(newCustomers.value.currentCustomer, newCustomers.value.previousCustomer);
-    });
-
-    const activePercentage = computed(() =>
-      totalCustomers.value > 0
-        ? ((activeCustomers.value / totalCustomers.value) * 100).toFixed(0)
-        : []
+  // in the last 7 days
+  const newPercentageChange = computed(() => {
+    return percentageChange(
+      totalCustomersLastWeek.value,
+      totalCustomersTwoWeeksAgo.value
     );
+  });
 
-    const inactivePercentage = computed(() =>
-      totalCustomers.value > 0
-        ? ((inactiveCustomers.value / totalCustomers.value) * 100).toFixed(0)
-        : []
-    );
+  const activePercentage = computed(() =>
+    totalCustomers.value > 0
+      ? ((activeCustomers.value / totalCustomers.value) * 100).toFixed(0)
+      : []
+  );
 
-    // Area Chart
-    const dailyActiveCustomers = computed(() => {
-      const dailyActiveCount = dailyCount(
-        customers.value,
-        (customer) => customer.status === true
-      );
-      return dailyActiveCount;
-    });
+  const inactivePercentage = computed(() =>
+    totalCustomers.value > 0
+      ? ((inactiveCustomers.value / totalCustomers.value) * 100).toFixed(0)
+      : []
+  );
 
-    const dailyInactiveCustomers = computed(() => {
-      const dailyInactiveCount = dailyCount(
-        customers.value,
-        (customer) => customer.status === false
-      );
-      return dailyInactiveCount;
-    });
+  const setSearchTerm = (term: string) => {
+    searchTerm.value = term;
+    goToPage(1);
 
-    const setSearchTerm = (term: string) => {
-      searchTerm.value = term;
-    };
+    delayGetCustomers();
+  };
 
-    const matchSearch = (customer: CustomerDetails, term: string) => {
-      const normalizedTerm = term.trim().toLowerCase().replace(/\s+/g, "");
-      const toMatch = (field: string) =>
-        field.toLowerCase().replace(/\s+/g, "");
+  // Integrate pagination using the filtered customers count.
+  const {
+    currentPage,
+    rowsPerPage,
+    totalPages,
+    nextPage,
+    prevPage,
+    goToPage,
+    updateRowsPerPage,
+  } = usePagination(computed(() => totalCustomers.value));
 
-      return (
-        toMatch(customer.first_name).includes(normalizedTerm) ||
-        toMatch(customer.last_name).includes(normalizedTerm) ||
-        toMatch(customer.email).includes(normalizedTerm) ||
-        customer.phone_number.replace(/\s+/g, "").includes(normalizedTerm) ||
-        toMatch(customer.state || "").includes(normalizedTerm) ||
-        toMatch(customer.status ? "active" : "inactive").startsWith(
-          normalizedTerm
-        )
-      );
-    };
+  const formattedPaginatedCustomers = computed(() => {
+    return customers.value.map((customer) => ({
+      ...customer,
+      status: customer.status ? "Active" : "Inactive",
+    }));
+  });
 
-    const filteredCustomers = computed(() => {
-      if (!searchTerm.value.trim()) return customers.value;
-      return customers.value.filter((customer) =>
-        matchSearch(customer, searchTerm.value)
-      );
-    });
+  watch([currentPage, rowsPerPage], () => {
+    getCustomers();
+  });
 
-    // Actions
-    const addCustomer = (newCustomer: CustomerDetails) => {
-      customers.value.push({
-        id: uuidv4(),
-        ...newCustomer,
-      });
-    };
+  // Actions
+  const getCustomers = async () => {
+    const start = (currentPage.value - 1) * rowsPerPage.value;
+    const end = start + (rowsPerPage.value - 1);
 
-    const updateCustomer = (id: string, updatedCustomer: CustomerDetails) => {
-      const index = customers.value.findIndex((customer) => customer.id === id);
-      if (index !== -1) {
-        customers.value[index] = { id, ...updatedCustomer };
+    // Query for paginated customers
+    let customerQuery = supabase
+      .from("customers")
+      .select("*", { count: "exact" })
+      .range(start, end)
+      .order("created_at", { ascending: false });
+
+    // Search filtering
+    const search = searchTerm.value.trim();
+    if (search) {
+      const filters = [
+        `first_name.ilike.%${search}%`,
+        `last_name.ilike.%${search}%`,
+        `email.ilike.%${search}%`,
+        `phone_number.ilike.%${search}%`,
+        `state.ilike.%${search}%`,
+      ];
+
+      if (search.length >= 2) {
+        const lowerSearch = search.toLowerCase();
+        if ("active".startsWith(lowerSearch)) {
+          filters.push("status.eq.true");
+        } else if ("inactive".startsWith(lowerSearch)) {
+          filters.push("status.eq.false");
+        }
       }
-    };
 
-    const deleteCustomer = (id: string) => {
-      customers.value = customers.value.filter(
-        (customer) => customer.id !== id
+      customerQuery = customerQuery.or(filters.join(","));
+    }
+
+    const {
+      data: customersData,
+      error: customersError,
+      count: totalCount,
+    } = await customerQuery;
+
+    // Error handling
+    if (customersError) {
+      toast.error(customersError?.message || { timeout: 3000 });
+      return;
+    }
+
+    // Assign values
+    if (customersData) {
+      customers.value = customersData;
+      totalCustomers.value = totalCount ?? customersData.length;
+
+      subscribedChanges();
+    }
+  };
+
+  const fetchCarddata = async () => {
+    // Fetch all data in parallel using Promise.all
+    const [
+      { count: totalCount },
+      { count: activeCount, error: activeError },
+      { count: inactiveCount, error: inactiveError },
+      { count: activeLastWeekCount, error: activeLastWeekError },
+      { count: activeTwoWeeksAgoCount, error: activeTwoWeeksAgoError },
+      { count: inactiveLastWeekCount, error: inactiveLastWeekError },
+      { count: inactiveTwoWeeksAgoCount, error: inactiveTwoWeeksAgoError },
+      { count: newCustomersLastWeekCount, error: newCustomersLastWeekError },
+      {
+        count: newCustomersTwoWeeksAgoCount,
+        error: newCustomersTwoWeeksAgoError,
+      },
+    ] = await Promise.all([
+      supabase.from("customers").select("*", { count: "exact", head: true }),
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .eq("status", true), // Active customers count
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .eq("status", false), // Inactive customers count
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .eq("status", true)
+        .gte("created_at", oneWeekAgo.toISOString()),
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .eq("status", true)
+        .gte("created_at", twoWeeksAgo.toISOString())
+        .lt("created_at", oneWeekAgo.toISOString()),
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .eq("status", false)
+        .gte("created_at", oneWeekAgo.toISOString()),
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .eq("status", false)
+        .gte("created_at", twoWeeksAgo.toISOString())
+        .lt("created_at", oneWeekAgo.toISOString()),
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", oneWeekAgo.toISOString()),
+      supabase
+        .from("customers")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", twoWeeksAgo.toISOString())
+        .lt("created_at", oneWeekAgo.toISOString()),
+    ]);
+
+    // Error handling
+    if (
+      activeError ||
+      inactiveError ||
+      activeLastWeekError ||
+      activeTwoWeeksAgoError ||
+      inactiveLastWeekError ||
+      inactiveTwoWeeksAgoError ||
+      newCustomersLastWeekError ||
+      newCustomersTwoWeeksAgoError
+    ) {
+      // fix all these error message later
+      toast.error(
+        activeError ||
+          inactiveError ||
+          activeLastWeekError ||
+          activeTwoWeeksAgoError ||
+          inactiveLastWeekError ||
+          inactiveTwoWeeksAgoError ||
+          newCustomersLastWeekError ||
+          newCustomersTwoWeeksAgoError,
+        { timeout: 3000 }
       );
-    };
+      return;
+    }
 
-    const getCustomerById = (id: string): CustomerDetails | undefined => {
-      return customers.value.find((customer) => customer.id === id);
-    };
+    if (totalCount) {
+      activeCustomers.value = activeCount ?? 0;
+      inactiveCustomers.value = inactiveCount ?? 0;
+      activeLastWeekCustomers.value = activeLastWeekCount ?? 0;
+      activeTwoWeeksAgoCustomers.value = activeTwoWeeksAgoCount ?? 0;
+      inactiveLastWeekCustomers.value = inactiveLastWeekCount ?? 0;
+      inactiveTwoWeeksAgoCustomers.value = inactiveTwoWeeksAgoCount ?? 0;
+      totalCustomersLastWeek.value = newCustomersLastWeekCount ?? 0;
+      totalCustomersTwoWeeksAgo.value = newCustomersTwoWeeksAgoCount ?? 0;
+    }
+  };
 
-    return {
-      customers,
-      filteredCustomers,
-      totalCustomers,
-      activeCustomers,
-      inactiveCustomers,
-      newCustomers,
-      activePercentage,
-      inactivePercentage,
-      activePercentageChange,
-      inactivePercentageChange,
-      newPercentageChange,
-      dailyActiveCustomers,
-      dailyInactiveCustomers,
-      addCustomer,
-      updateCustomer,
-      deleteCustomer,
-      setSearchTerm,
-      getCustomerById,
-    };
-  },
-  {
-    persist: {
-      key: "customer-store",
-      storage: localStorage,
-    },
-  }
-);
+  const fetchCustomerCounts = async () => {
+    const { data, error } = await supabase
+      .from("customers")
+      .select("status, created_at");
+
+    if (error) {
+      console.error("Error fetching customer data:", error);
+      return [];
+    }
+
+    // Process data to get daily counts
+    const counts: Record<string, { active: number; inactive: number }> = {};
+    const today = new Date();
+
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const dateString = date.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+      counts[dateString] = { active: 0, inactive: 0 };
+    }
+
+    data.forEach((customer) => {
+      const createdDate = new Date(customer.created_at)
+        .toISOString()
+        .split("T")[0];
+      if (counts[createdDate]) {
+        if (customer.status === true) counts[createdDate].active++;
+        else if (customer.status === false) counts[createdDate].inactive++;
+      }
+    });
+
+    customerData.value = Object.entries(counts).map(
+      ([date, { active, inactive }]) => ({
+        date,
+        active,
+        inactive,
+      })
+    );
+  };
+
+  const addCustomer = async (newCustomer: CustomerDetails) => {
+    const { data, error } = await supabase
+      .from("customers")
+      .insert(newCustomer)
+      .select();
+
+    if (error) {
+      toast.error("Couldn't create customer", {
+        timeout: 3000,
+      });
+
+      return;
+    }
+
+    if (data) {
+      toast.success("Customer created successfully", {
+        timeout: 2000,
+      });
+
+      router.push("/customers");
+    }
+  };
+
+  const updateCustomer = async (
+    id: string,
+    updatedCustomer: CustomerDetails
+  ) => {
+    const { data, error } = await supabase
+      .from("customers")
+      .update(updatedCustomer)
+      .eq("id", id)
+      .select();
+
+    if (error) {
+      toast.error("Couldn't update customer", {
+        timeout: 3000,
+      });
+
+      return;
+    }
+
+    if (data) {
+      toast.success("Customer updated successfully", {
+        timeout: 2000,
+      });
+
+      router.push("/customers");
+    }
+  };
+
+  const deleteCustomer = async (id: string) => {
+    const { error } = await supabase.from("customers").delete().eq("id", id);
+
+    if (error) {
+      toast.error(error.message, {
+        timeout: 3000,
+      });
+
+      return;
+    }
+
+    if (!error) {
+      toast.success("Customer deleted successfully", {
+        timeout: 2000,
+      });
+      getCustomers();
+    }
+  };
+
+  const subscribedChanges = () => {
+    supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "customers" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            customers.value.unshift(payload.new as CustomerDetails);
+          }
+          if (payload.eventType === "UPDATE") {
+            const index = findCustomerIndex(customers.value, payload.old.id);
+
+            if (index !== -1) {
+              customers.value[index] = payload.new as CustomerDetails;
+            }
+          }
+          if (payload.eventType === "DELETE") {
+            const index = findCustomerIndex(customers.value, payload.old.id);
+
+            if (index !== -1) {
+              customers.value.splice(index, 1);
+            }
+          }
+        }
+      )
+      .subscribe();
+  };
+
+  const getCustomerById = (id: string): CustomerDetails | undefined => {
+    return customers.value.find((customer) => customer.id === id);
+  };
+
+  const findCustomerIndex = (
+    customers: CustomerDetails[],
+    id: string
+  ): number => {
+    return customers.findIndex((customer) => customer.id === id);
+  };
+
+  const delayGetCustomers = useDebounce(getCustomers, 500);
+
+  return {
+    customerData,
+    formattedPaginatedCustomers,
+    currentPage,
+    rowsPerPage,
+    totalPages,
+    customers,
+    totalCustomers,
+    activeCustomers,
+    inactiveCustomers,
+    totalCustomersLastWeek,
+    activePercentage,
+    inactivePercentage,
+    activePercentageChange,
+    inactivePercentageChange,
+    newPercentageChange,
+    dailyActiveCustomers,
+    dailyInactiveCustomers,
+    fetchCustomerCounts,
+    fetchCarddata,
+    getCustomers,
+    addCustomer,
+    updateCustomer,
+    deleteCustomer,
+    setSearchTerm,
+    getCustomerById,
+    nextPage,
+    prevPage,
+    goToPage,
+    updateRowsPerPage,
+  };
+});

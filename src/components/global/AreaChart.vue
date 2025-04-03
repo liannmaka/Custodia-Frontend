@@ -14,22 +14,34 @@ import { useCustomerStore } from "@/store/customers";
 
 const customerStore = useCustomerStore();
 
+// Ensure labels are always Mon-Sun
+const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+
 const series = computed(() => {
+  const activeData = Array(7).fill(0);
+  const inactiveData = Array(7).fill(0);
+
+  customerStore.customerData.forEach((item) => {
+    const date = new Date(item.date);
+
+    const weekday = date.toLocaleDateString("en-US", { weekday: "short" });
+
+    const index = weekDays.indexOf(weekday);
+    if (index !== -1) {
+      activeData[index] = item.active;
+      inactiveData[index] = item.inactive;
+    }
+  });
+
   return [
-  {
-    name: "Active",
-    data: customerStore.dailyActiveCustomers,
-  },
-  {
-    name: "Inactive",
-    data: customerStore.dailyInactiveCustomers,
-  },
-  ]
-})
+    { name: "Active", data: activeData },
+    { name: "Inactive", data: inactiveData },
+  ];
+});
 
 const chartOptions = {
   colors: ["#5b42db", "#ef4444"],
-  labels: ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"],
+  labels: weekDays,
   chart: {
     fontFamily: "Karla, serif",
     toolbar: { show: false },
@@ -81,6 +93,7 @@ const chartOptions = {
     show: true,
     position: "bottom",
     horizontalAlign: "center",
+    offsetY: 40, 
     formatter: (seriesName: string) => {
       return `${seriesName} Customers`;
     },
@@ -89,7 +102,7 @@ const chartOptions = {
       fillColors: ["#5b42db", "#ef4444"],
     },
     itemMargin: {
-      horizontal: 5
+      horizontal: 5,
     },
   },
   markers: {
@@ -101,5 +114,15 @@ const chartOptions = {
     curve: "smooth",
     width: 2,
   },
+  responsive: [
+    {
+      breakpoint: 1240,
+      options: {
+        legend: {
+          offsetY: 10,
+        }
+      }
+    }
+  ]
 };
 </script>

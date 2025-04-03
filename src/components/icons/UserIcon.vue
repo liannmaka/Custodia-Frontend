@@ -5,7 +5,7 @@
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="currentColor"
-    :class="class"
+    :class="customClass"
   >
     <path
       stroke-linecap="round"
@@ -16,14 +16,11 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  fill: {
-    type: String,
-    default: 'currentColor',
-  },
-  class: {
-    type: String,
-    default: 'size-6'
-  }
+withDefaults(defineProps<{
+  fill?: string;
+  customClass?: string
+}>(), {
+  fill: 'currentColor',
+  customClass: 'size-6'
 })
 </script>

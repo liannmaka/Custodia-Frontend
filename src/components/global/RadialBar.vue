@@ -41,7 +41,7 @@ const options = {
     radialBar: {
       dataLabels: {
         name: {
-          fontSize: "12px"
+          fontSize: "12px",
         },
         value: {
           fontSize: "12px",
@@ -83,6 +83,9 @@ const options = {
               },
             },
           },
+        },
+        legend: {
+          position: "top",
         },
       },
     },

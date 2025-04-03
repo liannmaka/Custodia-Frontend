@@ -17,10 +17,12 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  fill: {
-    type: String,
-    default: "currentColor",
-  },
-});
+withDefaults(
+  defineProps<{
+    fill?: string;
+  }>(),
+  {
+    fill: "currentColor",
+  }
+);
 </script>

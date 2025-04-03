@@ -24,8 +24,8 @@
         </li>
       </ul>
       <button
-        class="lg:hidden absolute bottom-0 right-4 py-0.5 px-1 text-primary bg-primary/10 rounded-sm backdrop-blur-sm"
-        @click="handleCloseSidebar"
+        class="lg:hidden absolute bottom-0 right-4 py-0.5 px-1 text-primary bg-primary/10 rounded-sm backdrop-blur-sm hover:opacity-90 hover:-translate-y-0.5"
+        @click="$emit('close-sidebar')"
       >
         <BackArrow class="w-5 h-5" />
       </button>
@@ -43,13 +43,6 @@ defineProps<{
 }>();
 
 const route = useRoute();
-
-const emit = defineEmits(["close-sidebar"]);
-
-
-const handleCloseSidebar = () => {
-  emit("close-sidebar");
-};
 
 const dashBoardMenu: DashboardMenu[] = [
   {
