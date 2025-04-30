@@ -24,7 +24,7 @@ export const percentageChange = (
       color:
         currentDate > 0
           ? "text-green-500"
-          : "text-gray-500 justify-center ml-2",
+          : "text-gray-500",
     };
   }
 
