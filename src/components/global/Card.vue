@@ -13,7 +13,7 @@
             stroke-width="2.3"
           />
         </div>
-        <div :class="cardData.metricsColor" class="flex text-xs">
+        <div :class="cardData.metricsColor" class="flex justify-center text-xs">
           <component
             :is="cardData.metricsIcon"
             class="w-[9px] h-[9px] self-center mr-1"
