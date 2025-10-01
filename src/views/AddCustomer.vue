@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-white px-5 lg:px-10 py-4">
-    <div class="pt-6 rounded-lg">
+  <div class="bg-secondary pb-8">
+       <div class="bg-white px-5 lg:px-10 pt-10 pb-4">
       <h2 class="text-xl font-bold">
         {{ customerId ? "Edit" : "Add" }} Customer
       </h2>
